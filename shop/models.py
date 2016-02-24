@@ -4,114 +4,114 @@ from __future__ import unicode_literals
 from django.db import models
 
 # Create your models here.
-#ÓÃ»§×´Ì¬±í
+#ç”¨æˆ·çŠ¶æ€è¡¨
 class Userstatus(models.Model):
-    status=models.CharField(max_length=20,unique=True)  #×´Ì¬Ãû³Æ
+    status=models.CharField(max_length=20,unique=True)  #çŠ¶æ€åç§°
     def __unicode__(self):
         return self.status
-#ÓÃ»§ĞÅÏ¢±í
+#ç”¨æˆ·ä¿¡æ¯è¡¨
 class Fuser(models.Model):
-    username = models.CharField(max_length=20,unique=True)      #ÓÃ»§Ãû
-    password = models.CharField(max_length=256)                 #ÃÜÂë
-    name = models.CharField(max_length=30,null=True,blank=True) #ĞÕÃû
-    sex = models.CharField(max_length=2,null=True,blank=True)   #ĞÔ±ğ
-    birthday = models.DateField(null=True,blank=True)           #ÉúÈÕ
-    email = models.EmailField(unique=True)                      #ÓÊÏä
-    tel = models.CharField(max_length=11,null=True,blank=True)  #µç»°
-    address = models.CharField(max_length=256,null=True,blank=True)#µØÖ·
-    code = models.IntegerField(null=True,blank=True)            #ÓÊ±à
-    createtime = models.DateTimeField(auto_now_add=True)        #×¢²áÊ±¼ä
-    status = models.ForeignKey('Userstatus')                    #ÓÃ»§×´Ì¬
+    username = models.CharField(max_length=20,unique=True)      #ç”¨æˆ·å
+    password = models.CharField(max_length=256)                 #å¯†ç 
+    name = models.CharField(max_length=30,null=True,blank=True) #å§“å
+    sex = models.CharField(max_length=2,null=True,blank=True)   #æ€§åˆ«
+    birthday = models.DateField(null=True,blank=True)           #ç”Ÿæ—¥
+    email = models.EmailField(unique=True)                      #é‚®ç®±
+    tel = models.CharField(max_length=11,null=True,blank=True)  #ç”µè¯
+    address = models.CharField(max_length=256,null=True,blank=True)#åœ°å€
+    code = models.IntegerField(null=True,blank=True)            #é‚®ç¼–
+    createtime = models.DateTimeField(auto_now_add=True)        #æ³¨å†Œæ—¶é—´
+    status = models.ForeignKey('Userstatus')                    #ç”¨æˆ·çŠ¶æ€
     def __unicode__(self):
         return self.name
 
-#ÉÌÆ··ÖÀà±í
+#å•†å“åˆ†ç±»è¡¨
 class Category(models.Model):
-    name = models.CharField(max_length=30,null=True,blank=True,unique=True) #Àà±ğÃû³Æ
-    pid = models.ForeignKey('Category',null=True,blank=True)                         #¸¸¼¶Àà±ğ±àºÅ
+    name = models.CharField(max_length=30,null=True,blank=True,unique=True) #ç±»åˆ«åç§°
+    pid = models.ForeignKey('Category',null=True,blank=True)                         #çˆ¶çº§ç±»åˆ«ç¼–å·
     def __unicode__(self):
         return self.name
     
-#ÉÌÆ·ĞÅÏ¢±í
+#å•†å“ä¿¡æ¯è¡¨
 class Goods(models.Model):
-    name = models.CharField(max_length=100,unique=True)                             #ÉÌÆ·Ãû³Æ
-    category = models.ForeignKey('Category')                                        #ÉÌÆ·ËùÊô·ÖÀà
-    price = models.DecimalField(max_digits=12,decimal_places=2,default='0.00')      #µ¥¼Û
-    sale_price = models.DecimalField(max_digits=12,decimal_places=2,default='0.00') #ÏúÊÛ¼Û¸ñ
-    descriptiont = models.TextField(null=True,blank=True)                           #ÉÌÆ·ÃèÊö
-    amount = models.IntegerField(null=True,blank=True)                              #¿â´æÊıÁ¿
-    #pic = models.ImageField(null=True,blank=True)                                   #ÉÌÆ·Í¼Æ¬
-    status = models.IntegerField(null=True,blank=True)                              #ÉÌÆ·×´Ì¬
-    addtime = models.DateTimeField(auto_now_add=True)                               #ÉÌÆ·Ìí¼ÓÊ±¼ä
-    paddr = models.CharField(max_length=30)                                         #ÉÌÆ·²úµØ
+    name = models.CharField(max_length=100,unique=True)                             #å•†å“åç§°
+    category = models.ForeignKey('Category')                                        #å•†å“æ‰€å±åˆ†ç±»
+    price = models.DecimalField(max_digits=12,decimal_places=2,default='0.00')      #å•ä»·
+    sale_price = models.DecimalField(max_digits=12,decimal_places=2,default='0.00') #é”€å”®ä»·æ ¼
+    descriptiont = models.TextField(null=True,blank=True)                           #å•†å“æè¿°
+    amount = models.IntegerField(null=True,blank=True)                              #åº“å­˜æ•°é‡
+    #pic = models.ImageField(null=True,blank=True)                                   #å•†å“å›¾ç‰‡
+    status = models.IntegerField(null=True,blank=True)                              #å•†å“çŠ¶æ€
+    addtime = models.DateTimeField(auto_now_add=True)                               #å•†å“æ·»åŠ æ—¶é—´
+    paddr = models.CharField(max_length=30)                                         #å•†å“äº§åœ°
     def __unicode__(self):
         return self.name
 
-#ÉÌÆ·ÆÀÂÛ±í
+#å•†å“è¯„è®ºè¡¨
 class Comment(models.Model):
-    comment= models.TextField()                 #ÆÀÂÛÄÚÈİ
-    user=models.ForeignKey('Fuser')             #ÆÀÂÛÈË
-    commenttime = models.DateTimeField(auto_now_add=True)#ÆÀÂÛÊ±¼ä
-    goods= models.ForeignKey('Goods')           #ÆÀÂÛµÄÉÌÆ·
+    comment= models.TextField()                 #è¯„è®ºå†…å®¹
+    user=models.ForeignKey('Fuser')             #è¯„è®ºäºº
+    commenttime = models.DateTimeField(auto_now_add=True)#è¯„è®ºæ—¶é—´
+    goods= models.ForeignKey('Goods')           #è¯„è®ºçš„å•†å“
     def __unicode__(self):
         return self.comment
     
-#ÊÕ»õÈËĞÅÏ¢±í
+#æ”¶è´§äººä¿¡æ¯è¡¨
 class Consignees(models.Model):
-    user = models.ForeignKey('Fuser')       #ÓÃ»§Ãû
-    name = models.CharField(max_length=20)  #ÊÕ»õÈËĞÕÃû
-    addr = models.CharField(max_length=100) #ÊÕ»õÈËµØÖ·
-    code = models.IntegerField(null=True,blank=True)#ÓÊ±à
-    tel = models.CharField(max_length=11)           #ÁªÏµµç»°
+    user = models.ForeignKey('Fuser')       #ç”¨æˆ·å
+    name = models.CharField(max_length=20)  #æ”¶è´§äººå§“å
+    addr = models.CharField(max_length=100) #æ”¶è´§äººåœ°å€
+    code = models.IntegerField(null=True,blank=True)#é‚®ç¼–
+    tel = models.CharField(max_length=11)           #è”ç³»ç”µè¯
     def __unicode__(self):
         return self.name
 
 
-#¶©µ¥×´Ì¬±í
+#è®¢å•çŠ¶æ€è¡¨
 class OrderStatus(models.Model):
-    status = models.CharField(max_length=20,unique=True)    #¶©µ¥×´Ì¬Ãû³Æ
+    status = models.CharField(max_length=20,unique=True)    #è®¢å•çŠ¶æ€åç§°
     def __unicode__(self):
         return self.status
 
-#¸¶¿î·½Ê½
+#ä»˜æ¬¾æ–¹å¼
 class PayMethod(models.Model):
-    pay_name = models.CharField(max_length=20,unique=True)#¸¶¿î·½Ê½
+    pay_name = models.CharField(max_length=20,unique=True)#ä»˜æ¬¾æ–¹å¼
     def __unicode__(self):
         return self.pay_name
     
-#¶©µ¥±í
+#è®¢å•è¡¨
 class Order(models.Model):
-    order_serial = models.IntegerField(unique=True)     #Éú³ÉµÄ¶©µ¥±àºÅ
-    user = models.ForeignKey('Fuser')                   #ÏÂµ¥ÈË
-    name = models.ForeignKey('Consignees')              #ÊÕ»õÈË
-    pay = models.ForeignKey('PayMethod')                #¸¶¿î·½Ê½
-    descriptiont = models.TextField(null=True,blank=True)       #±¸×¢
-    order_genrate_time = models.DateTimeField(auto_now_add=True)#¶©µ¥Éú³ÉÊ±¼ä
-    status = models.ForeignKey('OrderStatus')           #¶©µ¥×´Ì¬
-    operator = models.ForeignKey('Buser')               #²Ù×÷Ô±
-    amount = models.DecimalField(max_digits=12,decimal_places=2)        #¶©µ¥×Ü½ğ¶î
+    order_serial = models.IntegerField(unique=True)     #ç”Ÿæˆçš„è®¢å•ç¼–å·
+    user = models.ForeignKey('Fuser')                   #ä¸‹å•äºº
+    name = models.ForeignKey('Consignees')              #æ”¶è´§äºº
+    pay = models.ForeignKey('PayMethod')                #ä»˜æ¬¾æ–¹å¼
+    descriptiont = models.TextField(null=True,blank=True)       #å¤‡æ³¨
+    order_genrate_time = models.DateTimeField(auto_now_add=True)#è®¢å•ç”Ÿæˆæ—¶é—´
+    status = models.ForeignKey('OrderStatus')           #è®¢å•çŠ¶æ€
+    operator = models.ForeignKey('Buser')               #æ“ä½œå‘˜
+    amount = models.DecimalField(max_digits=12,decimal_places=2)        #è®¢å•æ€»é‡‘é¢
     def __unicode__(self):
         return self.order_serial
-#¶©µ¥ÉÌÆ·±í
+#è®¢å•å•†å“è¡¨
 class OrderGoods(models.Model):
-    good = models.ForeignKey('Goods')          #ÉÌÆ·
-    price = models.DecimalField(max_digits=12,decimal_places=2)#¹ºÂò¼Û¸ñ
-    amount = models.IntegerField()              #¹ºÂòÊıÁ¿
-    order_id =models.ForeignKey('Order')        #Éú³ÉµÄ¶©µ¥±àºÅ
+    good = models.ForeignKey('Goods')          #å•†å“
+    price = models.DecimalField(max_digits=12,decimal_places=2)#è´­ä¹°ä»·æ ¼
+    amount = models.IntegerField()              #è´­ä¹°æ•°é‡
+    order_id =models.ForeignKey('Order')        #ç”Ÿæˆçš„è®¢å•ç¼–å·
 
-#ºóÌ¨ÓÃ»§±í
+#åå°ç”¨æˆ·è¡¨
 class Buser(models.Model):
-    username =models.CharField(max_length=20,unique=True)       #ºóÌ¨ÓÃ»§Ãû
-    password = models.CharField(max_length=256)     #ÃÜÂë
-    name = models.CharField(max_length=20)          #ĞÕÃû
-    createtime = models.DateTimeField(auto_now_add=True)#Ìí¼ÓÊ±¼ä
-    permisson = models.ManyToManyField('Permission')#È¨ÏŞ
-    status = models.ForeignKey('Userstatus')       #ÓÃ»§×´Ì¬
+    username =models.CharField(max_length=20,unique=True)       #åå°ç”¨æˆ·å
+    password = models.CharField(max_length=256)     #å¯†ç 
+    name = models.CharField(max_length=20)          #å§“å
+    createtime = models.DateTimeField(auto_now_add=True)#æ·»åŠ æ—¶é—´
+    permisson = models.ManyToManyField('Permission')#æƒé™
+    status = models.ForeignKey('Userstatus')       #ç”¨æˆ·çŠ¶æ€
     def __unicode__(self):
         return self.name
 
-#²Ù×÷È¨ÏŞ±í
+#æ“ä½œæƒé™è¡¨
 class Permission(models.Model):
-    name = models.CharField(max_length=100,unique=True)#ÓÃ»§È¨ÏŞÃû³Æ
+    name = models.CharField(max_length=100,unique=True)#ç”¨æˆ·æƒé™åç§°
     def __unicode__(self):
         return self.name
