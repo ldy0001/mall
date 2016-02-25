@@ -1,0 +1,26 @@
+{% extends 'index.html' %}
+{% block title %}类结果{% endblock %}
+{% block body %}
+<!-- BEGIN SALE PRODUCT -->
+          <div class="col-md-12 sale-product">
+            <div class="bxslider-wrapper">
+              <ul class="bxslider" data-slides-phone="1" data-slides-tablet="2" data-slides-desktop="5" data-slide-margin="15">
+                {% for g in result %}
+                <li>
+                  <div class="product-item">
+                    <div class="pi-img-wrapper">
+                      <img src="{{ STATIC_URL }}images/k2.jpg" class="img-responsive" alt="Berry Lace Dress" />
+                    </div>
+                    <h3><a href="item/{{g.id}}/">{{g.name}}</a></h3>
+                    <div class="pi-price">{{g.sale_price}}</div>
+                    <a href="" class="btn btn-default add2cart">加入购物车</a>
+                    <div class="sticker sticker-sale"></div>
+                  </div>
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+          <!-- END SALE PRODUCT -->
+{% endblock %}
+{% block js %}{% endblock %}

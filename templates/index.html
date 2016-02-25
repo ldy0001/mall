@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% block title %}首页{% endblock %}
+{% block noheader %}
+<!-- BEGIN HEADER -->
+    <div role="navigation" class="navbar header no-margin">
+        <div class="container">
+            <div class="navbar-header">
+                <!-- BEGIN RESPONSIVE MENU TOGGLER -->
+                <button data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggle" type="button">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <!-- END RESPONSIVE MENU TOGGLER -->
+                <a href="index.html" class="navbar-brand"><img src="assets/img/logo_red.png" alt="商城系统"></a><!-- LOGO -->
+            </div>
+            <!-- BEGIN CART -->
+            <div class="cart-block">
+                <div class="cart-info">
+                    <a href="javascript:void(0);" class="cart-info-count">3 items</a>
+                    <a href="javascript:void(0);" class="cart-info-value">$1260</a>
+                </div>
+                <i class="fa fa-shopping-cart"></i>
+                <!-- BEGIN CART CONTENT -->
+                <div class="cart-content-wrapper">
+                  <div class="cart-content">
+                    <ul class="scroller" style="height: 250px;">
+                      <li>
+                        <a href="item.html"><img src="assets/temp/cart-img.jpg" alt="Rolex Classic Watch" width="37" height="34"></a>
+                        <span class="cart-content-count">x 1</span>
+                        <strong><a href="item.html">Rolex Classic Watch</a></strong>
+                        <em>$1230</em>
+                        <a href="javascript:void(0);" class="del-goods"><i class="fa fa-times"></i></a>
+                      </li>
+                    </ul>
+                    <div class="text-right">
+                      <a href="shopping-cart.html" class="btn btn-default">View Cart</a>
+                      <a href="checkout.html" class="btn btn-primary">Checkout</a>
+                    </div>
+                  </div>
+                </div>
+                <!-- END CART CONTENT -->
+            </div>
+            <!-- END CART -->
+            <!-- BEGIN TOP SEARCH -->
+              <div style="margin-top:24px;width:600px">
+                    <form action="/search/" method="get">
+                         <div class="input-group">
+                              <input type="text" name='search' class="form-control">
+                              <span class="input-group-btn">
+                                    <button class="btn btn-primary" type="submit">搜索</button>
+                              </span>
+                          </div>
+                    </form>
+               </div>     
+              <!-- END TOP SEARCH -->
+        </div>
+            <!-- BEGIN NAVIGATION -->
+            <div class="collapse navbar-collapse mega-menu">
+                <ul class="nav navbar-nav">
+                    <li class="dropdown">
+                      <a class="dropdown-toggle" data-toggle="dropdown" data-delay="0" data-close-others="false" data-target="product-list.html" href="product-list.html">
+                        	商品分类
+                        <i class="fa fa-angle-down"></i>
+                      </a>
+                      <!-- BEGIN DROPDOWN MENU -->
+                      <ul class="dropdown-menu" aria-labelledby="mega-menu">
+                        <li>
+                          <div class="nav-content">
+                            <!-- BEGIN DROPDOWN MENU - COLUMN -->
+                            {% for c1 in cate %}
+                            <div class="nav-content-col">
+                              <h3>{{c1.name}}</h3>
+                              <ul>
+                              {% for c2 in cate2 %}
+                              	{% ifequal c2.pid_id c1.id %} 
+                                <li><a href="list/{{c2.id}}/">{{c2.name}}</a></li>
+                                {% endifequal %}
+                                {% endfor %}
+                              </ul>
+                            </div>
+                            {% endfor %}
+                            <!-- END DROPDOWN MENU - COLUMN --
+                          </div>
+                        </li>
+                      </ul>
+                      <!-- END DROPDOWN MENU -->
+                    </li>                   
+                </ul>
+            </div>
+            <!-- END NAVIGATION -->        
+    </div>
+    <!-- END HEADER --> 
+{% endblock %}
+
+  
+    <div class="main">
+      <div class="container">
+        <!-- BEGIN SALE PRODUCT & NEW ARRIVALS -->
+        <div class="row margin-bottom-40">
+        {% block body %}
+          <!-- BEGIN SALE PRODUCT -->
+          <div class="col-md-12 sale-product">
+            <div class="bxslider-wrapper">
+              <ul class="bxslider" data-slides-phone="1" data-slides-tablet="2" data-slides-desktop="5" data-slide-margin="15">
+                {% for g in goods %}
+                <li>
+                  <div class="product-item">
+                    <div class="pi-img-wrapper">
+                      <img src="{{ STATIC_URL }}images/k2.jpg" class="img-responsive" alt="Berry Lace Dress" />
+                    </div>
+                    <h3><a href="item/{{g.id}}/">{{g.name}}</a></h3>
+                    <div class="pi-price">{{g.sale_price}}</div>
+                    <a href="" class="btn btn-default add2cart">加入购物车</a>
+                    <div class="sticker sticker-sale"></div>
+                  </div>
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+          <!-- END SALE PRODUCT -->
+          {% endblock %}
+{% block js %}{% endblock %}

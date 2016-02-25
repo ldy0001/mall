@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<!-- Head BEGIN -->
+<head>
+  <meta charset="utf-8">
+  <title>{%block title%}Metronic Shop UI{%endblock%}</title>
+  <!-- Global styles START -->          
+ 	<link href="/static/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+ 	<link href="/static/css/bootstrap.css" rel="stylesheet" type="text/css">
+  <!-- Global styles END --> 
+  	<link href="/static/css/style.css" rel="stylesheet" type="text/css">  	
+  	<link href="/static/css/style-responsive.css" rel="stylesheet" type="text/css">  
+  {% block css %}{% endblock %}
+</head>
+<!-- Head END -->
+<body>
+    <!-- BEGIN TOP BAR -->
+    <div class="pre-header">
+        <div class="container">
+            <div class="row">
+                <!-- BEGIN TOP BAR LEFT PART -->
+                <div class="col-md-6 col-sm-6 additional-shop-info">
+                </div>
+                <!-- END TOP BAR LEFT PART -->
+                <!-- BEGIN TOP BAR MENU -->
+                <div class="col-md-6 col-sm-6 additional-nav">
+                    <ul class="list-unstyled list-inline pull-right">
+                    	<li><a href="/">首页</a></li>
+                        <li><a href="{% url 'profile' %}">用户中心</a></li>
+                        <li><a href="{% url 'myorder' %}">订单中心</a></li>
+                        <li><a href="{% url 'cart' %}">购物车</a></li>
+                        <li><a href="{% url 'login' %}">登录</a></li>
+                        <li><a href="{% url 'zhuce' %}">注册</a></li>
+                    </ul>
+                </div>
+                <!-- END TOP BAR MENU -->
+            </div>
+        </div>        
+    </div>
+    <!-- END TOP BAR -->
+    {% block noheader %}
+	{% endblock %}
+    <div class="main">
+      <div class="container">
+        <!-- BEGIN SALE PRODUCT & NEW ARRIVALS -->
+        <div class="row margin-bottom-40">
+        {% block body %}
+          {% endblock %}
+        </div>
+        <!-- END SALE PRODUCT & NEW ARRIVALS -->
+      </div>
+    </div>
+    
+    <!-- BEGIN FOOTER -->
+    <div class="footer padding-top-15">
+      <div class="container">
+        <div class="row">
+          <!-- BEGIN COPYRIGHT -->
+          <div class="col-md-6 col-sm-6 padding-top-10">
+            2016 © 商城系统. 版权所有，翻版必究. 
+          </div>
+          <!-- END COPYRIGHT -->
+        </div>
+      </div>
+    </div>
+    <!-- END FOOTER -->   
+</body>
+{% block js %}{% endblock %}
+</html>
