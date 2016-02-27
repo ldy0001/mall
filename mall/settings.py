@@ -129,8 +129,4 @@ STATICFILES_DIRS=[
     os.path.join(BASE_DIR, "static"),]
 
 SESSION_SERIALIZER='django.contrib.sessions.serializers.PickleSerializer'
-
-AUTHENTICATION_BACKENDS = (  
-      'shop.auth.Fusercheck', 
-      'shop.auth.Busercheck',    
-    )  
+ 

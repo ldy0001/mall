@@ -17,7 +17,8 @@ from django.conf.urls import url
 from django.contrib import admin
 from shop import views
 urlpatterns = [
-    url(r'^admin/',views.houtai,name='admin'),
+     url(r'^admin/',admin.site.urls),          
+    #url(r'^admin/',views.houtai,name='admin'),
     url(r'^$', views.index),
     url(r'^zhuce/$', views.zhuce,name='zhuce'),
     url(r'^login/$', views.denglu,name='login'),
