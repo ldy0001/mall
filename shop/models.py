@@ -1,7 +1,8 @@
 #_*_coding:utf-8_*_
 from __future__ import unicode_literals
-
+from django.contrib.auth.models import AbstractUser
 from django.db import models
+import hashlib
 
 # Create your models here.
 #用户状态表
@@ -21,9 +22,10 @@ class Fuser(models.Model):
     address = models.CharField(max_length=256,null=True,blank=True)#地址
     code = models.IntegerField(null=True,blank=True)            #邮编
     createtime = models.DateTimeField(auto_now_add=True)        #注册时间
-    status = models.ForeignKey('Userstatus')                    #用户状态
-    def __unicode__(self):
-        return self.name
+    is_active = models.BooleanField()                    #用户状态  
+      
+    class Meta:  
+        db_table = "fuser"  
 
 #商品分类表
 class Category(models.Model):
@@ -106,12 +108,18 @@ class Buser(models.Model):
     name = models.CharField(max_length=20)          #姓名
     createtime = models.DateTimeField(auto_now_add=True)#添加时间
     permisson = models.ManyToManyField('Permission')#权限
-    status = models.ForeignKey('Userstatus')       #用户状态
-    def __unicode__(self):
-        return self.name
+    is_active = models.BooleanField()       #用户状态 
+      
+    class Meta:  
+        db_table = "buser"  
 
 #操作权限表
 class Permission(models.Model):
     name = models.CharField(max_length=100,unique=True)#用户权限名称
     def __unicode__(self):
         return self.name
+#购物车条目
+class CartItem(models.Model):
+    good = models.ForeignKey('Goods')
+    price = models.DecimalField(max_digits=8,decimal_places=2)
+    count = models.IntegerField()

@@ -13,30 +13,34 @@
                     <span class="icon-bar"></span>
                 </button>
                 <!-- END RESPONSIVE MENU TOGGLER -->
-                <a href="index.html" class="navbar-brand"><img src="assets/img/logo_red.png" alt="商城系统"></a><!-- LOGO -->
+                <a href="/" class="navbar-brand">商城系统</a><!-- LOGO -->
             </div>
             <!-- BEGIN CART -->
             <div class="cart-block">
                 <div class="cart-info">
-                    <a href="javascript:void(0);" class="cart-info-count">3 items</a>
-                    <a href="javascript:void(0);" class="cart-info-value">$1260</a>
+                    <a href="javascript:void(0);" class="cart-info-value">总计：￥{{cart.total_price}}</a>
                 </div>
-                <i class="fa fa-shopping-cart"></i>
+                <a href="{% url 'cart' %}"<i class="fa fa-shopping-cart"></i><a>
                 <!-- BEGIN CART CONTENT -->
                 <div class="cart-content-wrapper">
                   <div class="cart-content">
                     <ul class="scroller" style="height: 250px;">
-                      <li>
-                        <a href="item.html"><img src="assets/temp/cart-img.jpg" alt="Rolex Classic Watch" width="37" height="34"></a>
-                        <span class="cart-content-count">x 1</span>
-                        <strong><a href="item.html">Rolex Classic Watch</a></strong>
-                        <em>$1230</em>
-                        <a href="javascript:void(0);" class="del-goods"><i class="fa fa-times"></i></a>
+                       <li> 
+                      <strong><a href="item.html">名称</a></strong>
+                        <span class="cart-content-count">数量</span> 
+                        <em>小计</em>
                       </li>
+                    {% for item in cart.items %}
+                      <li> 
+                      <strong><a href="item.html">{{item.good.name}}</a></strong>
+                        <span class="cart-content-count">x{{item.count}}</span> 
+                        <em>{% widthratio item.count 1 item.price %}</em>
+                      </li>
+                      {% endfor %}
                     </ul>
                     <div class="text-right">
-                      <a href="shopping-cart.html" class="btn btn-default">View Cart</a>
-                      <a href="checkout.html" class="btn btn-primary">Checkout</a>
+                      <a href="/cart/" class="btn btn-default">购物车</a>
+                      <a href="/pay/" class="btn btn-primary">结算</a>
                     </div>
                   </div>
                 </div>
@@ -108,12 +112,12 @@
                 <li>
                   <div class="product-item">
                     <div class="pi-img-wrapper">
-                      <img src="{{ STATIC_URL }}images/k2.jpg" class="img-responsive" alt="Berry Lace Dress" />
+                      <img src="" class="img-responsive" alt="Berry Lace Dress" />
                     </div>
                     <h3><a href="item/{{g.id}}/">{{g.name}}</a></h3>
                     <div class="pi-price">{{g.sale_price}}</div>
-                    <a href="" class="btn btn-default add2cart">加入购物车</a>
-                    <div class="sticker sticker-sale"></div>
+                    <a  class="btn btn-default add2cart" aa={{g.id}}>加入购物车</a>
+
                   </div>
                 </li>
                 {% endfor %}
@@ -122,4 +126,20 @@
           </div>
           <!-- END SALE PRODUCT -->
           {% endblock %}
-{% block js %}{% endblock %}
+{% block js %}
+<script>
+	$(document).ready(function() {
+		$('.add2cart').each(function(){
+			$(this).click(function(){
+				id=$(this).attr('aa')
+				alert(id)
+				gid={'goodid':id}
+				console.log(gid)
+			$.get('/addcart/',gid,function(returndata){
+					console.log(returndata)
+			})
+		})
+		})
+	})
+</script>
+{% endblock %}

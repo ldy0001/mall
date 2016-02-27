@@ -1,4 +1,70 @@
 {% extends 'index.html' %}
 {% block title %}购物车{% endblock %}
-{% block bbody %}购物车{% endblock %}
-{% block js %}{% endblock %}
+{% block body %}
+          <!-- BEGIN CONTENT -->
+          <div class="col-md-12 col-sm-12">
+            <h1>购物车</h1>
+            <div class="shopping-cart-page">
+              <div class="shopping-cart-data clearfix">
+                <div class="table-wrapper-responsive">
+                <table summary="Shopping cart">
+                  <tr>
+                    <th class="shopping-cart-description">名称</th>
+                    <th class="shopping-cart-quantity">数量</th>
+                    <th class="shopping-cart-price">价格</th>
+                    <th class="shopping-cart-total">小计</th>
+                    <th class="del-goods-col">操作</th>
+                  </tr>
+                  {% for item in cart.items %}
+                  <tr>
+                    <td class="shopping-cart-description">
+                      <h3><a href="#">{{item.good.name}}</a></h3>
+                    </td>
+                    <td class="shopping-cart-quantity">
+                      <div class="product-quantity">
+                          <input  type="text" value="{{item.count}}"  class="form-control input-sm ">
+                      </div>
+                    </td>
+                    <td class="shopping-cart-price">
+                      <strong><span>$</span>{{item.price}}</strong>
+                    </td>
+                    <td class="shopping-cart-total">
+                      <strong><span>$</span>{% widthratio item.count 1 item.price %}</strong>
+                    </td>
+                    <td class="del-goods-col">
+                      <a href="javascript:void(0);" >删除</a>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </table>
+                </div>
+
+                <div class="shopping-total">
+                  <ul>
+                  <li class="shopping-total-price">
+                      <a  class="delcart">清空购物车</a>
+                    </li>
+                    <li class="shopping-total-price">
+                      <em>总计</em>
+                      <strong class="price"><span>￥</span>{{cart.total_price}}</strong>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <button class="btn btn-default" type="submit">继续购物</button>
+              <button class="btn btn-primary" type="submit">结算</button>
+            </div>
+          </div>
+          <!--END CONTENT -->
+{% endblock %}
+{% block js %}
+<script>
+	$(document).ready(function(){
+		$('.delcart').click(function(){
+		    alert('a') 
+			$.get('/cart/',{'delcart':'del'},funciton(data){
+			})
+		})
+	})
+</script>
+{% endblock %}

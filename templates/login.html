@@ -1,5 +1,24 @@
-{% extends 'index.html' %}
-{% block title %}登录{% endblock %}
-{% block noheader %}登录{% endblock %}
-{% block body %}{% endblock %}
-{% block js %}{% endblock %}
+{%extends 'index.html'%}
+{% block title %}
+系统登录
+{% endblock %}
+    {% block css %}
+
+    <link href="/static/css/bootstrap.css" rel="stylesheet">
+    <link href="/static/css/signin.css" rel="stylesheet">
+    <link href="/static/css/offcanvas.css" rel="stylesheet">
+    {% endblock %}
+{%block noheader%}
+<div class="container">
+    <form class="form-signin" method="post" action={% url 'login' %}>{% csrf_token %}
+        <h2 class="form-signin-heading">系统登录&nbsp;&nbsp;&nbsp;<a href={%url 'zhuce'%}>注册</a></h2>
+        <input id="inputEmail" class="form-control" placeholder="用户名" required="" autofocus="" type="text" name="username">
+        <input id="inputPassword" class="form-control" placeholder="密码" required="" type="password" name="password">
+        <div class="checkbox">
+            <label>
+                <input value="remember-me" type="checkbox"> 记住密码
+            </label>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">登录</button>
+    </form>
+{% endblock %}

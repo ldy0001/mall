@@ -17,16 +17,19 @@ from django.conf.urls import url
 from django.contrib import admin
 from shop import views
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
+    url(r'^admin/',views.houtai,name='admin'),
     url(r'^$', views.index),
     url(r'^zhuce/$', views.zhuce,name='zhuce'),
     url(r'^login/$', views.denglu,name='login'),
+	url(r'^zhuce/$', views.zhuce,name='zhuce'),
+    url(r'^logout/$', views.zhuxiao,name='logout'),
     url(r'^profile/$', views.profile,name='profile'),
     url(r'^setpwd/$', views.setpwd,name='setpwd'),
     url(r'^search/$', views.search,name='search'),
     url(r'^list/(?P<id>[\d]+)/$', views.list),
     url(r'^item/(?P<id>[\d]+)/$', views.item),
     url(r'^cart/$', views.cart,name='cart'),
+    url(r'^addcart/$', views.addcart,name='addcart'),
     url(r'^pay/$', views.pay,name='pay'),
     url(r'^myorder/$', views.myorder,name='myorder'),
     url(r'^ordersearch/$', views.ordersearch,name='ordersearch'),

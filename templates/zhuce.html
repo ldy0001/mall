@@ -1,5 +1,26 @@
-{% extends 'index.html' %}
-{% block title %}注册{% endblock %}
-{% block noheader %}注册{% endblock %}
-{% block body %}{% endblock %}
-{% block js %}{% endblock %}
+{%extends 'index.html'%}
+{% block title %}
+系统注册
+{% endblock %}
+    {% block css %}
+
+    <link href="/static/css/bootstrap.css" rel="stylesheet">
+    <link href="/static/css/signin.css" rel="stylesheet">
+    <link href="/static/css/offcanvas.css" rel="stylesheet">
+    {% endblock %}
+{%block noheader%}
+<div class="container">
+    <form class="form-signin" method="post" action={% url 'zhuce' %}>{% csrf_token %}
+        <h2 class="form-signin-heading">系统注册&nbsp;&nbsp;&nbsp;<a href={%url 'login'%}>登录</a></h2>
+        <input id="inputEmail" class="form-control" placeholder="输入用户名" required="" autofocus="" type="text" name="username">
+        <input id="inputPassword" class="form-control" placeholder="输入密码" required="" type="password" name="pwd">
+        <input id="inputPassword" class="form-control" placeholder="再次输入密码" required="" type="password" name="pwd_try">
+        <input id="inputPassword" class="form-control" placeholder="输入邮箱" required="" type="text" name="email">
+        <div style="color:red">
+            {{ msg }}
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">注册</button>
+    </form>
+
+</div>
+{% endblock %}

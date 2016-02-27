@@ -1,0 +1,24 @@
+{%extends 'index.html'%}
+{% block title %}
+后台登陆
+{% endblock %}
+    {% block css %}
+
+    <link href="/static/css/bootstrap.css" rel="stylesheet">
+    <link href="/static/css/signin.css" rel="stylesheet">
+    <link href="/static/css/offcanvas.css" rel="stylesheet">
+    {% endblock %}
+{%block noheader%}
+<div class="container">
+    <form class="form-signin" method="post" action={% url 'admin' %}>{% csrf_token %}
+        <h2 class="form-signin-heading">后台登陆</h2>
+        <input id="inputEmail" class="form-control" placeholder="用户名" required="" autofocus="" type="text" name="username">
+        <input id="inputPassword" class="form-control" placeholder="密码" required="" type="password" name="password">
+        <div class="checkbox">
+            <label>
+                <input value="remember-me" type="checkbox">记住密码
+            </label>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">登陆</button>
+    </form>
+{% endblock %}
