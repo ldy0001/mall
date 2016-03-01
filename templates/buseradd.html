@@ -1,7 +1,7 @@
 {% extends 'houtai.html' %}
 {% block title %}后台用户信息{% endblock %}
 {% block rightbody %}
-<div>
+<div class="panel panel-default">
 	<h2>后台用户添加</h2>
 	<div class="rightp">
 		<form class="form-signin" method="post" action="/buseradd/">{% csrf_token %}

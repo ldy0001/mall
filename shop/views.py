@@ -352,11 +352,52 @@ def chgpwd(request):
 def cate(request):
     cate=models.Category.objects.all()
     pcate=models.Category.objects.filter(pid=None)
+    if request.method=="POST":
+        name=request.POST.get('name')
+        print name
+        cateid=request.POST.get('cate')
+        print cateid
+        try:
+            cate=models.Category.objects.get(id=cateid)
+            print cate
+            if not models.Category.objects.filter(name=name):
+                catenew=models.Category(name=name,pid=cate)
+                catenew.save()
+        except Exception,e:
+                catenew=models.Category(name=name)
+                catenew.save()
+            
+        return HttpResponseRedirect('/cate/')
+        
     return render(request,'cate.html',{'cate':cate,'pcate':pcate})
 
 def goodlist(request):
-    cate=models.Category.objects.all()
+    cate=models.Category.objects.exclude(pid=None)
     goods=models.Goods.objects.all()
+    if request.method=="POST":
+        cateid=request.POST.get('cate')
+        print cateid
+        name=request.POST.get('name')
+        print name        
+        price=request.POST.get('price')
+        print price 
+        sprice=request.POST.get('sprice')
+        print sprice 
+        amount=request.POST.get('amount')
+        print amount 
+        pic=request.POST.get('pic')
+        print pic 
+        status=request.POST.get('status')
+        print status 
+        paddr=request.POST.get('paddr')
+        print paddr 
+        desc=request.POST.get('desc')
+        print desc 
+        cateobj=models.Category.objects.get(id=cateid)       
+        if not models.Goods.objects.filter(name=name):
+            goodnew=models.Goods(name=name,category=cateobj,price=price,sale_price=sprice,amount=amount,pic=pic,status=status,paddr=paddr,descriptiont=desc)
+            goodnew.save()
+        return HttpResponseRedirect('/goodlist/')    
     return render(request,'goodlist.html',{'goods':goods,'cate':cate})
 
 def goods(request):
@@ -364,7 +405,8 @@ def goods(request):
 
 def orderlist(request):
     orderlist=models.Order.objects.all().order_by('-id')
-    return render(request,'orderlist.html',{'orderlist':orderlist})
+    status=models.OrderStatus.objects.all()
+    return render(request,'orderlist.html',{'orderlist':orderlist,'status':status})
 
 def ordermodify(request):
     return render(request,'ordermodify.html')

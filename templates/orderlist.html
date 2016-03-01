@@ -1,9 +1,10 @@
 {% extends 'houtai.html' %}
 {% block title %}订单信息{% endblock %}
 {% block rightbody %}
-<div>
+<div class="panel panel-default">
 	<h2>订单列表</h2>
-	<table>
+	<p>按状态筛选：<select name="status">{% for s in status %}<option value={{s.id}}>{{s.status}}</option>{% endfor %}</select></p>
+	<table class="table">
 		<tr>
 			<td>订单号</td>
 			<td>下单时间</td>

@@ -1,9 +1,9 @@
 {% extends 'index.html' %}
 {% block title %}{% endblock %}
 {% block noheader %}
-<div class="table-wrapper-responsive">
+<div class="panel panel-default">
 	<h2>订单详情</h2>
-	<table>
+	<table class="table">
 		<tr>
 			<td>订单号：{{result.order_serial}} 订单状态：{{result.status}}</td>
 		</tr>
@@ -40,7 +40,7 @@
                     </td>
                     <td class="shopping-cart-quantity">
                       <div class="product-quantity">
-                          <input   type="text" value="{{og.amount}}"  class="form-control input-sm ">
+                          <strong>{{og.amount}}</strong>
                       </div>
                     </td>
                     <td class="shopping-cart-price">
