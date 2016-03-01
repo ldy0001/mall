@@ -18,18 +18,18 @@
                   {% for item in cart.items %}
                   <tr>
                     <td class="shopping-cart-description">
-                      <h3><a href="#">{{item.good.name}}</a></h3>
+                      <h3><a class="good" href="/item/{{item.good.id}} gid={{item.good.id}}">{{item.good.name}}</a></h3>
                     </td>
                     <td class="shopping-cart-quantity">
                       <div class="product-quantity">
-                          <input  type="text" value="{{item.count}}"  class="form-control input-sm ">
+                          <input   type="text" value="{{item.count}}"  class="form-control input-sm ">
                       </div>
                     </td>
                     <td class="shopping-cart-price">
-                      <strong><span>$</span>{{item.price}}</strong>
+                      <strong><span>￥</span>{{item.price}}</strong>
                     </td>
                     <td class="shopping-cart-total">
-                      <strong><span>$</span>{% widthratio item.count 1 item.price %}</strong>
+                      <strong><span>￥</span>{% widthratio item.count 1 item.price %}</strong>
                     </td>
                     <td class="del-goods-col">
                       <a href="javascript:void(0);" >删除</a>
@@ -51,8 +51,8 @@
                   </ul>
                 </div>
               </div>
-              <button class="btn btn-default" type="submit">继续购物</button>
-              <button class="btn btn-primary" type="submit">结算</button>
+              <a href="/"><input class="btn btn-default backgo" type="submit" value="继续购物" /></a>
+              <a href="/orderid/"><input type='submit' class="btn btn-primary jiesuan"  value="结算"/></a>
             </div>
           </div>
           <!--END CONTENT -->
@@ -61,10 +61,12 @@
 <script>
 	$(document).ready(function(){
 		$('.delcart').click(function(){
-		    alert('a') 
-			$.get('/cart/',{'delcart':'del'},funciton(data){
+			$.get('/cart/',{'delcart':'delcart'},funciton(data){
 			})
 		})
+		$('.jiesuan').click(function(){
+			$.get('/orderid/',1,function(){})
+			})
 	})
 </script>
 {% endblock %}

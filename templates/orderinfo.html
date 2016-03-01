@@ -1,0 +1,73 @@
+{% extends 'index.html' %}
+{% block title %}{% endblock %}
+{% block noheader %}
+<div class="table-wrapper-responsive">
+	<h2>订单详情</h2>
+	<table>
+		<tr>
+			<td>订单号：{{result.order_serial}} 订单状态：{{result.status}}</td>
+		</tr>
+		<tr>
+			<td>
+				<h3>收货人信息</h3>
+				<p>收货人：{{result.name}}</p>
+				<p>地址：{{result.name.addr}}</p>
+				<p>电话：{{result.name.tel}}</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<h3>支付方式</h3>
+				<p>付款方式：{{result.pay}}</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<h3>商品清单</h3>
+			<div class="shopping-cart-data clearfix">
+                <div class="table-wrapper-responsive">
+                <table summary="Shopping cart">
+                  <tr>
+                    <th class="shopping-cart-description">名称</th>
+                    <th class="shopping-cart-quantity">数量</th>
+                    <th class="shopping-cart-price">价格</th>
+                    <th class="shopping-cart-total">小计</th>
+                  </tr>
+                  {% for og in og %}
+                  <tr>
+                    <td class="shopping-cart-description">
+                      <h3><a class="good" href="/item/{{og.good.id}}">{{og.good.name}}</a></h3>
+                    </td>
+                    <td class="shopping-cart-quantity">
+                      <div class="product-quantity">
+                          <input   type="text" value="{{og.amount}}"  class="form-control input-sm ">
+                      </div>
+                    </td>
+                    <td class="shopping-cart-price">
+                      <strong><span>￥</span>{{og.price}}</strong>
+                    </td>
+                    <td class="shopping-cart-total">
+                      <strong><span>￥</span>{% widthratio og.amount 1 og.price %}</strong>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </table>
+                </div>
+
+                <div class="shopping-total">
+                  <ul>
+                    <li class="shopping-total-price">
+                      <em>总计</em>
+                      <strong class="price"><span>￥</span>{{result.amount}}</strong>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+			</td>
+		</tr>
+
+	</table>
+
+</div>
+{% endblock %}
+{% block js %}{% endblock %}

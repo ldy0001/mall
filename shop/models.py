@@ -22,8 +22,12 @@ class Fuser(models.Model):
     address = models.CharField(max_length=256,null=True,blank=True)#地址
     code = models.IntegerField(null=True,blank=True)            #邮编
     createtime = models.DateTimeField(auto_now_add=True)        #注册时间
-    is_active = models.BooleanField()                    #用户状态  
-      
+    is_active = models.BooleanField() 
+    def __unicode__(self):
+        return unicode(self.username)                   
+    #def save(self,*args,**kwargs):
+    #    self.password = hashlib.sha1(self.passwd+self.user).hexdigest()
+    #    super(Fuser,self).save(*args,**kwargs)  
     class Meta:  
         db_table = "fuser"  
 
@@ -83,7 +87,7 @@ class PayMethod(models.Model):
     
 #订单表
 class Order(models.Model):
-    order_serial = models.IntegerField(unique=True)     #生成的订单编号
+    order_serial = models.CharField(max_length=32,unique=True)     #生成的订单编号
     user = models.ForeignKey('Fuser')                   #下单人
     name = models.ForeignKey('Consignees')              #收货人
     pay = models.ForeignKey('PayMethod')                #付款方式
@@ -99,8 +103,9 @@ class OrderGoods(models.Model):
     good = models.ForeignKey('Goods')          #商品
     price = models.DecimalField(max_digits=12,decimal_places=2)#购买价格
     amount = models.IntegerField()              #购买数量
-    order_id =models.ForeignKey('Order')        #生成的订单编号
-
+    order_id =models.ManyToManyField('Order')        #生成的订单编号
+    def __unicode__(self):
+        return self.good
 #后台用户表
 class Buser(models.Model):
     username =models.CharField(max_length=20,unique=True)       #后台用户名
@@ -109,7 +114,8 @@ class Buser(models.Model):
     createtime = models.DateTimeField(auto_now_add=True)#添加时间
     permisson = models.ManyToManyField('Permission')#权限
     is_active = models.BooleanField()       #用户状态 
-      
+    def __unicode__(self):
+        return self.name  
     class Meta:  
         db_table = "buser"  
 

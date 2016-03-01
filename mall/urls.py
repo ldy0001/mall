@@ -17,8 +17,8 @@ from django.conf.urls import url
 from django.contrib import admin
 from shop import views
 urlpatterns = [
-     url(r'^admin/',admin.site.urls),          
-    #url(r'^admin/',views.houtai,name='admin'),
+    #url(r'^admin/',admin.site.urls),          
+    url(r'^admin/',views.houtai,name='admin'),
     url(r'^$', views.index),
     url(r'^zhuce/$', views.zhuce,name='zhuce'),
     url(r'^login/$', views.denglu,name='login'),
@@ -31,11 +31,13 @@ urlpatterns = [
     url(r'^item/(?P<id>[\d]+)/$', views.item),
     url(r'^cart/$', views.cart,name='cart'),
     url(r'^addcart/$', views.addcart,name='addcart'),
+    url(r'^chgcart/$', views.chgcart,name='chgcart'),
+    url(r'^orderid/$', views.orderid,name='orderid'),
     url(r'^pay/$', views.pay,name='pay'),
     url(r'^myorder/$', views.myorder,name='myorder'),
     url(r'^ordersearch/$', views.ordersearch,name='ordersearch'),
-    url(r'^orderinfo/$', views.orderinfo,name='orderinfo'),
-    url(r'^comment/$', views.comment,name='comment'),
+    url(r'^orderinfo/(?P<id>[\d]+)/$', views.orderinfo),
+    url(r'^comment/(?P<id>[\d]+)/$', views.comment),
     url(r'^admin/$', views.houtai,name='admin'),
     url(r'^manage/$', views.manage,name='manage'),
     url(r'^buser/$', views.buser,name='buser'),

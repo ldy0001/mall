@@ -1,7 +1,7 @@
 #_*_coding:utf-8_*_
 from django.shortcuts import render,render_to_response,HttpResponse,HttpResponseRedirect
 from django.template import RequestContext
-import models
+import models,hashlib
 from shop.models import Category
 from django.template.loader import get_template
 import re
@@ -14,15 +14,21 @@ class Cart(object):
         self.items = []
         print self.items
         self.total_price = 0.00
-        
+        print 'self.total_price的类型是：',type(self.total_price)
     def add_good(self,good):
-        self.total_price += good.sale_price
+        print 'good.sale_price的类型是：',type(good.sale_price)
+        self.total_price += float(good.sale_price)
         print self.total_price
         for item in self.items:
             if item.good.id == good.id:
                 item.count += 1
                 return
         self.items.append(models.CartItem(good=good,price=good.sale_price,count=1))
+    def chg_good(self,good,num):
+         for item in self.items:
+            if item.good.id == good.id:
+                item.count = num
+                return   
 
 def check_session(func):
     def wrapper(request,*args, **kv):
@@ -56,9 +62,8 @@ def zhuce(request):
         password=request.POST.get('pwd')
         password_try=request.POST.get('pwd_try')
         if password==password_try:
-            try:
                 userobj=models.Fuser.objects.get(username=username)
-                print userobj
+                print userobj   
                 if not userobj:
                     email=request.POST.get('email')
                     if len(email)>5:
@@ -72,9 +77,6 @@ def zhuce(request):
                         return render(request,'zhuce.html',{'msg':'邮箱不合法'})
                 else:
                     return render(request,'zhuce.html',{'msg':'用户名已存在'})
-            except Exception:
-                userobj=models.Fuser(username=username,password=password,is_active=True)
-                userobj.save()
                 return render(request,'zhuce.html',{'msg':'注册成功'})
         else:
             err="两次密码不一致，请重新输入"
@@ -132,8 +134,9 @@ def list(request,id):
         return render(request,'list.html',{'result':result})
 
 def item(request,id):
-    
-    return render(request,'item.html')
+    good=models.Goods.objects.get(id=id)
+    comment=models.Comment.objects.filter(goods=good).order_by('-id')
+    return render(request,'item.html',{'good':good,'comment':comment})
     
 def addcart(request):
     id=request.GET.get('goodid')
@@ -148,7 +151,8 @@ def addcart(request):
         print request.session["cart"]
     except Exception,e:
          print e 
-    return HttpResponseRedirect('/cart/')   
+    return HttpResponseRedirect('/cart/')
+   
   
 def cart(request):
     try:
@@ -168,31 +172,144 @@ def cart(request):
 #            return HttpResponse(t.render(c))   
     except Exception,e:
         print e
-    if request.GET.get('delcart')=='del':
+    if request.GET.get('delcart')=='delcart':
         del request.session['cart']
         return HttpResponseRedirect('/cart/')
     return render(request,'cart.html',{'cart':cart})    
-    
 
+def chgcart(request):
+    gid=request.GET.getlist('gid')
+    print gid
+    num=request.GET.getlist('num')
+    print num
+    for g in gid:
+        good=models.Goods.objects.get('id=gid')
+        cart = request.session.get("cart")
+        cart.chg_good(good,num)
+    #cart = Cart(good)
+        request.session["cart"] = cart
+    return HttpResponseRedirect('/pay/')  
+
+def orderid(request):
+    import datetime  
+    import random  
+    nowTime=datetime.datetime.now().strftime("%Y%m%d%H%M%S");#生成当前时间  
+    randomNum=random.randint(0,100)#生成的随机整数n，其中0<=n<=100  
+    if randomNum<=10:  
+        orderid=str(0)+str(randomNum)  
+    orderid=str(nowTime)+str(randomNum)  
+    print orderid
+    request.session["orderid"] = orderid
+    return HttpResponseRedirect('/pay/') 
+    
+    
 def pay(request):
     pays=models.PayMethod.objects.all()
     cart = request.session.get("cart")
-    return render(request,'pay.html',{'cart':cart,'pays':pays})
+    orderid=request.session.get("orderid")
+    conn=models.Consignees.objects.all()
+    if request.method=="POST":
+        uname=request.session.get("myuser")
+        print "用户",uname
+        name=request.POST.get('name')
+        print "收货人",name
+        addr=request.POST.get('addr')
+        print "地址",addr
+        code=request.POST.get('code')
+        print "邮编",code
+        tel=request.POST.get('tel')
+        print "电话",tel
+        beizhu=request.POST.get('beizhu')
+        print "备注",beizhu
+        payid=request.POST.get('pay')
+        print "付款id",payid
+        pay=models.PayMethod.objects.get(id=payid)
+        user=models.Fuser.objects.get(username=uname)
+        print "用户对象",user
+        conobj=models.Consignees.objects.get(user=user,name=name,addr=addr,code=code,tel=tel)
+        if conobj is None:
+            con=models.Consignees(user=user,name=name,addr=addr,code=code,tel=tel)
+            con.save()
+    
+        conobj=models.Consignees.objects.get(user=user,name=name,addr=addr,tel=tel)
+        orderstatus=models.OrderStatus.objects.get(status='等待收货')
+        buser=models.Buser.objects.get(id=1)
+        order=models.Order(order_serial=orderid,user=user,name=conobj,pay=pay,descriptiont=beizhu,status=orderstatus,operator=buser,amount=cart.total_price)
+        order.save()
+        orderobj=models.Order.objects.get(order_serial=orderid)
+        for item in cart.items:
+            good=models.Goods.objects.get(id=item.good.id)
+            ordergoodnew=models.OrderGoods(good=good,price=item.price,amount=item.count)
+            ordergoodnew.save()
+            ordergoodnew.order_id.add(orderobj.id)
+        del request.session['cart']
+        del request.session['orderid']
+        return HttpResponseRedirect('/myorder/')    
+        
+    return render(request,'pay.html',{'cart':cart,'pays':pays,'oid':orderid})
 
 def myorder(request):
-    return render(request,'myorder.html')
+    user=request.session.get("myuser")
+    user=models.Fuser.objects.get(username=user)
+    orders=models.Order.objects.filter(user=user)
+    ordergoods=models.OrderGoods.objects.all()
+    return render(request,'myorder.html',{'orders':orders,'ordergoods':ordergoods})
 
 def ordersearch(request):
-    return render(request,'ordersearch.html')
+    user=request.session.get("myuser")
+    userobj=models.Fuser.objects.get(username=user)
+    oid=request.GET.get('orderid')
+    try:
+        result=models.Order.objects.get(order_serial=oid,user=userobj)
+        og=models.OrderGoods.objects.filter(order_id=result)
+    except Exception,e:
+        return HttpResponseRedirect('/myorder/')
+    return render(request,'ordersearch.html',{'result':result,'og':og})
 
-def orderinfo(request):
-    return render(request,'orderinfo.html')
+def orderinfo(request,id):
+    user=request.session.get("myuser")
+    userobj=models.Fuser.objects.get(username=user)
+    try:
+        result=models.Order.objects.get(order_serial=id,user=userobj)
+        og=models.OrderGoods.objects.filter(order_id=result)
+    except Exception,e:
+        return HttpResponseRedirect('/myorder/')
+    return render(request,'orderinfo.html',{'result':result,'og':og})
 
-def comment(request):
-    return render(request,'comment.html')
+def comment(request,id):
+    username=request.session.get("myuser")
+    user=models.Fuser.objects.get(username=username)
+    good=models.Goods.objects.get(id=id)
+    if request.method=="POST":
+        comm=request.POST.get('comment')
+        print comm
+        cobj=models.Comment(comment=comm,user=user,goods=good)
+        cobj.save()
+        url="/item/%s/"%(id)
+        return HttpResponseRedirect(url)
+        
+    return render(request,'comment.html',{'good':good})
 
 def houtai(request):
-    return render(request,'admin.html')
+    if request.method=="GET":
+        return render(request,'admin.html')
+    if request.POST:
+        username=request.POST.get('username')
+        print username
+        password=request.POST.get('password')
+        print password
+        user=models.Buser.objects.get(username=username)
+        if user is not None:
+            if password==user.password:
+                if user.is_active:              
+                    request.session['buser']=username
+                    return HttpResponseRedirect('/manage/')
+                else:
+                    return render(request,'admin.html',{'login_err':'用户名未激活，请联系管理员'})
+            else:
+                return render(request,'admin.html',{'login_err':'用户名或密码错!'})
+        else:
+            return render(request,'admin.html',{'login_err':'用户不存在'})
 
 def manage(request):
     return render(request,'manage.html')

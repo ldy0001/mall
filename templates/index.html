@@ -132,7 +132,6 @@
 		$('.add2cart').each(function(){
 			$(this).click(function(){
 				id=$(this).attr('aa')
-				alert(id)
 				gid={'goodid':id}
 				console.log(gid)
 			$.get('/addcart/',gid,function(returndata){

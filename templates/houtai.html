@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>{% block title %}后台管理{% endblock %}</title>
+    <link href="/static/css/bootstrap.css" rel="stylesheet">
+    <link href="/static/css/dashboard.css" rel="stylesheet">
+    {% block css %}
+    {% endblock %}
+</head>
+
+  <body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">后台管理系统</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="/">主页</a></li>
+                <li><a href="/user/">后台用户管理</a></li>
+                <li><a href="/host/">商品管理</a></li>
+                <li><a href="/per/">前台用户管理</a></li>
+                <li><a href="/yc/">订单管理</a></li>     
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    {% if uu %}
+                    <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">
+                        {{ uu }}
+                        <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href={% url 'login' %}>更换帐号</a></li>
+                        <li><a href={% url 'logout' %}>注销</a></li>
+                    </ul>
+                </li>
+                {% else %}
+                <li><a href={% url 'login' %}>登录</a></li>
+                <li><a href={% url 'zhuce' %}>注册</a></li>
+                {% endif %}
+
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>
+
+    <div class="container-fluid">
+      <div class="row">
+      {% block body%}
+        <div class="col-sm-3 col-md-2 sidebar">
+          <ul class="nav nav-sidebar">
+            <li class="active"><a href="#">用户管理<span class="sr-only">(current)</span></a></li>
+            	<ul class="nav">
+		            <li><a href="/user/">查看后台用户</a></li>
+		            <li><a href="/adduser/">添加后台用户</a></li>
+          		</ul>
+            
+            <li class="active"><a href="#">商品管理</a></li>
+            	<ul class="nav">
+		            <li><a href="/host/">商品类别管理</a></li>
+		            <li><a href="/addhost/">商品信息管理</a></li>
+          		</ul>
+          	
+            <li class="active"><a href="#">权限管理</a></li>
+            	<ul class="nav">
+		            <li><a href="/per/">权限列表</a></li>
+		            <li><a href="/addper/">添加权限</a></li>
+          		</ul>
+            
+            <li class="active"><a href="#">密码管理</a></li>
+            	<ul class="nav">
+		            <li><a href="/chgpwd/">修改密码</a></li>
+		            <li><a href="/chgkey/">修改key密码</a></li>
+          		</ul>
+            
+          </ul>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        {% block rightbody%}
+
+          {% endblock%}
+        </div>
+        {%endblock%}
+      </div>
+    </div>
+<script src="/static/js/jquery-2.1.4.js"></script>
+<script src="/static/js/bootstrap.js"></script>
+<script>
+$(".nav li a[href='{{ request.path }}']").parent().addClass('active')
+</script>
+{% block js %}
+
+{% endblock %}
+</body></html>

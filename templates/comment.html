@@ -1,0 +1,29 @@
+{% extends 'index.html' %}
+{% block title %}评论商品{% endblock %}
+{% block body %}
+<div>
+	<h2>商品评论</h2>
+	<form action="/comment/{{good.id}}/" method="post">{% csrf_token %}
+	<table>
+		<tr>
+			<td>
+				商品名称：<a href="/item/{{good.id}}/">{{good.name}}</a>
+			</td>
+		</tr>
+		<tr>
+			<h3>评价信息</h3>
+			<td>
+				<textarea name="comment"></textarea>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<input type="submit" value="发表评论" name="comment" />
+			</td>
+		</tr>		
+	</table>
+	</form>
+</div>
+
+{% endblock %}
+{% block js %}{% endblock %}
