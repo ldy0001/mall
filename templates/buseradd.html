@@ -1,0 +1,17 @@
+{% extends 'houtai.html' %}
+{% block title %}后台用户信息{% endblock %}
+{% block rightbody %}
+<div>
+	<h2>后台用户添加</h2>
+	<div class="rightp">
+		<form class="form-signin" method="post" action="/buseradd/">{% csrf_token %}
+			<input  class="form-control" placeholder="输入用户名" required="" autofocus="" type="text" name="username"><span>{{msg}}</span>
+        	<input class="form-control" placeholder="输入密码" required="" type="password" name="pwd">
+        	<input class="form-control" placeholder="输入姓名" required="" type="text" name="name">
+        	<p>账户状态<select name="key"><option value='1'>启用</option><option value='0'>不启用</option></select></p>
+        	<p>用户权限<select name="per" multiple="multiple">{% for p in pers%}<option value={{p.id}}>{{p.name}}</option>{%endfor%}</select></p>
+        	<input type='submit' value="添加用户">
+		</form>
+	</div>	
+</div>
+{% endblock %}

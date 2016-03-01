@@ -1,0 +1,80 @@
+{% extends 'houtai.html' %}
+{% block title %}商品信息{% endblock %}
+{% block rightbody %}
+<div>
+	<h2>商品列表</h2>
+	<form>
+	<table>
+		<tr>
+			<td>所属分类</td>
+			<td>商品名称</td>
+			<td>商品价格</td>
+			<td>销售价格</td>
+				
+		</tr>
+		<tr>
+			<td><select>{% for c in cate %}<option>{{c.name}}</option>{% endfor %}</select></td>
+			<td><input type="text" name='name' /></td>
+			<td><input type="text" name='price' /></td>
+			<td><input type="text" name='sprice' /></td>
+			
+						
+		</tr>
+		<tr>
+			
+			<td>库存数量</td>
+			<td>商品图片</td>
+			<td>状态</td>
+			<td>产地</td>
+		</tr>
+		<tr>
+			
+			<td><input type="text" name='amount' /></td>
+			<td><input type="file" name='pic' /></td>
+			<td><input type="text" name='status' /></td>
+			<td><input type="text" name='paddr' /></td>
+			
+		</tr>
+		<tr>
+			<td colspan=3>描述</td>
+			<td>操作</td>
+		</tr>
+		<tr>
+			<td colspan=3><textarea name='desc' rows=3 cols=90 /></textarea></td>
+			<td><input type="submit" value="添加商品" /></td>
+		</tr>
+	</table>
+	</form>
+	<table>
+		<tr>
+			<td>商品编号</td>
+			<td>所属分类</td>
+			<td>商品名称</td>
+			<td>商品价格</td>
+			<td>销售价格</td>
+			<td>描述</td>
+			<td>库存数量</td>
+			<td>商品图片</td>
+			<td>状态</td>
+			<td>添加时间</td>
+			<td>产地</td>			
+		</tr>
+		{% for g in goods %}
+		<tr>
+			<td>{{g.id}}</td>
+			<td>{{g.category}}</td>
+			<td>{{g.name}}</td>
+			<td>{{g.price}}</td>
+			<td>{{g.sale_price}}</td>
+			<td>{{g.descriptiont}}</td>
+			<td>{{g.amount}}</td>
+			<td>{{g.pic}}</td>
+			<td>{{g.status}}</td>
+			<td>{{g.addtime}}</td>
+			<td>{{g.paddr}}</td>
+		</tr>
+		{% endfor %}
+	</table>
+</div>
+{% endblock %}
+{% block js %}{% endblock %}

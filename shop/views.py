@@ -112,9 +112,13 @@ def zhuxiao(request):
     return HttpResponseRedirect('/')
 
 def profile(request):
-    return render(request,'profile.html')
+    user=request.session.get("myuser")
+    user=models.Fuser.objects.get(username=user)
+    return render(request,'profile.html',{'user':user})
 
 def setpwd(request):
+    if request.method=="POST":
+        pass
     return render(request,'setpwd.html')
 
 def search(request):
@@ -226,12 +230,13 @@ def pay(request):
         pay=models.PayMethod.objects.get(id=payid)
         user=models.Fuser.objects.get(username=uname)
         print "用户对象",user
-        conobj=models.Consignees.objects.get(user=user,name=name,addr=addr,code=code,tel=tel)
-        if conobj is None:
+        try:
+            conobj=models.Consignees.objects.get(user=user,name=name,addr=addr,code=code,tel=tel)
+        except Exception,e:
             con=models.Consignees(user=user,name=name,addr=addr,code=code,tel=tel)
             con.save()
-    
-        conobj=models.Consignees.objects.get(user=user,name=name,addr=addr,tel=tel)
+            conobj=models.Consignees.objects.get(user=user,name=name,addr=addr,tel=tel)
+        
         orderstatus=models.OrderStatus.objects.get(status='等待收货')
         buser=models.Buser.objects.get(id=1)
         order=models.Order(order_serial=orderid,user=user,name=conobj,pay=pay,descriptiont=beizhu,status=orderstatus,operator=buser,amount=cart.total_price)
@@ -315,22 +320,55 @@ def manage(request):
     return render(request,'manage.html')
 
 def buser(request):
-    return render(request,'buser.html')
+    buser=models.Buser.objects.all().order_by('-id')
+    return render(request,'buser.html',{'buser':buser})
 
 def buseradd(request):
-    return render(request,'buseradd.html')
+    pers=models.Permission.objects.all()
+    if request.method=="POST":
+        username=request.POST.get('username')
+        pwd=request.POST.get('pwd')
+        name=request.POST.get('name')
+        key=request.POST.get('key')
+        per=request.POST.getlist('per')
+        try:
+            uobj=models.Buser.objects.get(username=username)
+            print uobj
+        except Exception,e:
+            userobj=models.Buser(username=username,password=pwd,name=name,is_active=key)
+            userobj.save()
+            for p in per:
+                pp=models.Permission.objects.get(id=p)
+                userobj.permisson.add(pp)
+            return HttpResponseRedirect('/buser/')
+        else:
+            return render(request,'buseradd.html',{'msg':'用户已存在'})
+            
+    return render(request,'buseradd.html',{'pers':pers})
 
 def chgpwd(request):
     return render(request,'chgpwd.html')
 
 def cate(request):
-    return render(request,'cate.html')
+    cate=models.Category.objects.all()
+    pcate=models.Category.objects.filter(pid=None)
+    return render(request,'cate.html',{'cate':cate,'pcate':pcate})
+
+def goodlist(request):
+    cate=models.Category.objects.all()
+    goods=models.Goods.objects.all()
+    return render(request,'goodlist.html',{'goods':goods,'cate':cate})
 
 def goods(request):
     return render(request,'goods.html')
+
+def orderlist(request):
+    orderlist=models.Order.objects.all().order_by('-id')
+    return render(request,'orderlist.html',{'orderlist':orderlist})
 
 def ordermodify(request):
     return render(request,'ordermodify.html')
 
 def fuser(request):
-    return render(request,'fuser.html')
+    fuser=models.Fuser.objects.all()
+    return render(request,'fuser.html',{'fuser':fuser})

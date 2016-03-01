@@ -45,7 +45,9 @@ urlpatterns = [
     url(r'^chgpwd/$', views.chgpwd,name='chgpwd'),
     url(r'^cate/$', views.cate,name='cate'),
     url(r'^goods/$', views.goods,name='goods'),
+    url(r'^goodlist/$', views.goodlist,name='goodslist'),
     url(r'^ordermodify/$', views.ordermodify,name='ordermodify'),
+    url(r'^orderlist/$', views.orderlist,name='orderlist'),
     url(r'^fuser/$', views.fuser,name='fuser'),
     
 ]

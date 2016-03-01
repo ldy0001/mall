@@ -1,0 +1,27 @@
+{% extends 'houtai.html' %}
+{% block title %}订单信息{% endblock %}
+{% block rightbody %}
+<div>
+	<h2>订单列表</h2>
+	<table>
+		<tr>
+			<td>订单号</td>
+			<td>下单时间</td>
+			<td>下单人</td>
+			<td>订单金额</td>
+			<td>订单状态</td>
+			
+		</tr>
+		{% for l in orderlist %}
+		<tr>
+			<td>{{l.order_serial}}</td>
+			<td>{{l.order_genrate_time}}</td>
+			<td>{{l.user}}</td>
+			<td>{{l.amount}}</td>
+			<td>{{l.status}}</td>
+		</tr>
+		{% endfor %}
+	</table>
+</div>
+{% endblock %}
+{% block js %}{% endblock %}

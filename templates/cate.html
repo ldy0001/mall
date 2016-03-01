@@ -1,0 +1,41 @@
+{% extends 'houtai.html' %}
+{% block title %}商品分类信息{% endblock %}
+{% block rightbody %}
+<div>
+	<h2>商品分类列表</h2>
+	<form>
+	<table>
+		<tr>
+			<td>分类名称</td>
+			<td>父级分类</td>
+			<td>操作</td>
+		</tr>
+		<tr>
+			<td><input type="text" name='name' /></td>
+			<td><select name="cate"><option value="None">大类</option>{% for c in pcate %}<option value={{c.id}}>{{c.name}}</option>{% endfor %}</select></td>
+			<td><input type="submit" value="添加商品" /></td>						
+		</tr>
+	</table>
+	</form>
+	<table>
+		<tr>
+			<td>类别编号</td>
+			<td>类别名称</td>
+			<td>父类名称</td>
+			<td>修改</td>
+			<td>保存</td>
+			
+		</tr>
+		{% for c in cate %}
+		<tr>
+			<td>{{c.id}}</td>
+			<td>{{c.name}}</td>
+			<td>{{c.pid}}</td>
+			<td>{{l.amount}}</td>
+			<td>{{l.status}}</td>
+		</tr>
+		{% endfor %}
+	</table>
+</div>
+{% endblock %}
+{% block js %}{% endblock %}
