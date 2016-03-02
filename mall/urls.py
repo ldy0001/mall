@@ -39,6 +39,7 @@ urlpatterns = [
     url(r'^orderinfo/(?P<id>[\d]+)/$', views.orderinfo),
     url(r'^comment/(?P<id>[\d]+)/$', views.comment),
     url(r'^admin/$', views.houtai,name='admin'),
+    url(r'^tuichu/$', views.tuichu,name='tuichu'),
     url(r'^manage/$', views.manage,name='manage'),
     url(r'^buser/$', views.buser,name='buser'),
     url(r'^buseradd/$', views.buseradd,name='buseradd'),

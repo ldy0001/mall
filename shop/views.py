@@ -62,22 +62,22 @@ def zhuce(request):
         password=request.POST.get('pwd')
         password_try=request.POST.get('pwd_try')
         if password==password_try:
+            try:
                 userobj=models.Fuser.objects.get(username=username)
-                print userobj   
-                if not userobj:
-                    email=request.POST.get('email')
-                    if len(email)>5:
-                        if re.match("^(\w)+(\.\w+)*@(\w)+((\.\w+)+)$", email)!=None:
-                            userobj=models.Fuser(username=username,password=password,email=email,is_active=True)
-                            userobj.save()
-                            return render(request,'zhuce.html',{'msg':'注册成功'})
-                        else:
-                            return render(request,'zhuce.html',{'msg':'邮箱不合法'})
+                print userobj
+            except Exception,e:     
+                email=request.POST.get('email')
+                if len(email)>5:
+                    if re.match("^(\w)+(\.\w+)*@(\w)+((\.\w+)+)$", email)!=None:
+                        userobj=models.Fuser(username=username,password=password,email=email,is_active=True)
+                        userobj.save()
+                        return render(request,'zhuce.html',{'msg':'注册成功'})
                     else:
                         return render(request,'zhuce.html',{'msg':'邮箱不合法'})
                 else:
-                    return render(request,'zhuce.html',{'msg':'用户名已存在'})
-                return render(request,'zhuce.html',{'msg':'注册成功'})
+                    return render(request,'zhuce.html',{'msg':'邮箱不合法'})
+            else:
+                return render(request,'zhuce.html',{'msg':'用户名已存在'})
         else:
             err="两次密码不一致，请重新输入"
             return render(request,'zhuce.html',{'msg':err})      
@@ -91,18 +91,21 @@ def denglu(request):
         print username
         password=request.POST.get('password')
         print password
-        user=models.Fuser.objects.get(username=username)
-        if user is not None:
-            if password==user.password:
-                if user.is_active:              
-                    request.session['myuser']=username
-                    return HttpResponseRedirect('/')
-                else:
-                    return render(request,'login.html',{'login_err':'用户名未激活，请联系管理员'})
-            else:
-                return render(request,'login.html',{'login_err':'用户名或密码错!'})
-        else:
+        try:
+            user=models.Fuser.objects.get(username=username)
+        except Exception,e:
             return render(request,'login.html',{'login_err':'用户不存在'})
+        else:
+            if user is not None:
+                if password==user.password:
+                    if user.is_active:              
+                        request.session['myuser']=username
+                        return HttpResponseRedirect('/')
+                    else:
+                        return render(request,'login.html',{'login_err':'用户名未激活，请联系管理员'})
+                else:
+                    return render(request,'login.html',{'login_err':'用户名或密码错!'})
+            
 
 def zhuxiao(request):
     try:
@@ -111,11 +114,16 @@ def zhuxiao(request):
         pass
     return HttpResponseRedirect('/')
 
+@check_session
 def profile(request):
     user=request.session.get("myuser")
-    user=models.Fuser.objects.get(username=user)
+    try:
+        user=models.Fuser.objects.get(username=user)
+    except Exception,e:
+        print e
     return render(request,'profile.html',{'user':user})
 
+@check_session
 def setpwd(request):
     if request.method=="POST":
         pass
@@ -194,6 +202,7 @@ def chgcart(request):
         request.session["cart"] = cart
     return HttpResponseRedirect('/pay/')  
 
+
 def orderid(request):
     import datetime  
     import random  
@@ -206,7 +215,7 @@ def orderid(request):
     request.session["orderid"] = orderid
     return HttpResponseRedirect('/pay/') 
     
-    
+@check_session    
 def pay(request):
     pays=models.PayMethod.objects.all()
     cart = request.session.get("cart")
@@ -253,13 +262,18 @@ def pay(request):
         
     return render(request,'pay.html',{'cart':cart,'pays':pays,'oid':orderid})
 
+@check_session
 def myorder(request):
     user=request.session.get("myuser")
-    user=models.Fuser.objects.get(username=user)
+    try:
+        user=models.Fuser.objects.get(username=user)
+    except Exception,e:
+        print e    
     orders=models.Order.objects.filter(user=user)
     ordergoods=models.OrderGoods.objects.all()
     return render(request,'myorder.html',{'orders':orders,'ordergoods':ordergoods})
 
+@check_session
 def ordersearch(request):
     user=request.session.get("myuser")
     userobj=models.Fuser.objects.get(username=user)
@@ -281,6 +295,7 @@ def orderinfo(request,id):
         return HttpResponseRedirect('/myorder/')
     return render(request,'orderinfo.html',{'result':result,'og':og})
 
+@check_session
 def comment(request,id):
     username=request.session.get("myuser")
     user=models.Fuser.objects.get(username=username)
@@ -295,6 +310,17 @@ def comment(request,id):
         
     return render(request,'comment.html',{'good':good})
 
+
+def check_session_hou(func):
+    def wrapper(request,*args, **kv):
+        userinfo=request.session.get('buser',None) 
+        print userinfo
+        if not userinfo:
+            return HttpResponseRedirect('/admin/')
+        return func(request,*args, **kv)
+    return wrapper
+
+
 def houtai(request):
     if request.method=="GET":
         return render(request,'admin.html')
@@ -303,26 +329,38 @@ def houtai(request):
         print username
         password=request.POST.get('password')
         print password
-        user=models.Buser.objects.get(username=username)
-        if user is not None:
-            if password==user.password:
-                if user.is_active:              
-                    request.session['buser']=username
-                    return HttpResponseRedirect('/manage/')
-                else:
-                    return render(request,'admin.html',{'login_err':'用户名未激活，请联系管理员'})
-            else:
-                return render(request,'admin.html',{'login_err':'用户名或密码错!'})
-        else:
+        try:
+            user=models.Buser.objects.get(username=username)
+        except Exception,e:
             return render(request,'admin.html',{'login_err':'用户不存在'})
+        else:
+            if user is not None:
+                if password==user.password:
+                    if user.is_active:              
+                        request.session['buser']=username
+                        return HttpResponseRedirect('/manage/')
+                    else:
+                        return render(request,'admin.html',{'login_err':'用户名未激活，请联系管理员'})
+                else:
+                    return render(request,'admin.html',{'login_err':'用户名或密码错!'})
+            
 
+def tuichu(request):
+    try:
+        request.session['buser']=''
+    except KeyError:
+        pass
+    return HttpResponseRedirect('/admin/')
+@check_session_hou
 def manage(request):
     return render(request,'manage.html')
 
+@check_session_hou
 def buser(request):
     buser=models.Buser.objects.all().order_by('-id')
     return render(request,'buser.html',{'buser':buser})
 
+@check_session_hou
 def buseradd(request):
     pers=models.Permission.objects.all()
     if request.method=="POST":
@@ -346,9 +384,11 @@ def buseradd(request):
             
     return render(request,'buseradd.html',{'pers':pers})
 
+@check_session_hou
 def chgpwd(request):
     return render(request,'chgpwd.html')
 
+@check_session_hou
 def cate(request):
     cate=models.Category.objects.all()
     pcate=models.Category.objects.filter(pid=None)
@@ -371,6 +411,7 @@ def cate(request):
         
     return render(request,'cate.html',{'cate':cate,'pcate':pcate})
 
+@check_session_hou
 def goodlist(request):
     cate=models.Category.objects.exclude(pid=None)
     goods=models.Goods.objects.all()
@@ -400,17 +441,21 @@ def goodlist(request):
         return HttpResponseRedirect('/goodlist/')    
     return render(request,'goodlist.html',{'goods':goods,'cate':cate})
 
+@check_session_hou
 def goods(request):
     return render(request,'goods.html')
 
+@check_session_hou
 def orderlist(request):
     orderlist=models.Order.objects.all().order_by('-id')
     status=models.OrderStatus.objects.all()
     return render(request,'orderlist.html',{'orderlist':orderlist,'status':status})
 
+@check_session_hou
 def ordermodify(request):
     return render(request,'ordermodify.html')
 
+@check_session_hou
 def fuser(request):
     fuser=models.Fuser.objects.all()
     return render(request,'fuser.html',{'fuser':fuser})
