@@ -112,7 +112,7 @@
                 <li>
                   <div class="product-item">
                     <div class="pi-img-wrapper">
-                      <img src="" class="img-responsive" alt="Berry Lace Dress" />
+                      <a href="/item/{{g.id}}/" ><img src=/media/{{g.pic}} class="img-responsive" alt="Berry Lace Dress" height="150" width="150" /></a>
                     </div>
                     <h3><a href="/item/{{g.id}}/">{{g.name}}</a></h3>
                     <div class="pi-price">{{g.sale_price}}</div>
@@ -136,6 +136,9 @@
 				console.log(gid)
 			$.get('/addcart/',gid,function(returndata){
 					console.log(returndata)
+					if (returndata==('OK')){
+					location.reload()
+					}
 			})
 		})
 		})

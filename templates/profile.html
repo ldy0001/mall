@@ -6,5 +6,69 @@
 	
 </div>
 {% endblock %}
-{% block body %}{% endblock %}
-{% block js %}{% endblock %}
+{% block body %}
+<div class="panel panel-default">
+	<table class="table">
+		<tr>
+			<td>姓名：</td><td class="usertd" user="name">{{user.name}}</td>
+		</tr>
+		<tr>
+			<td>性别：</td><td class="usertd" user="sex">{{user.sex}}</td>
+		</tr>
+		<tr>
+			<td>出生年月</td><td class="usertd" user="birthday">{{user.birthday}}</td>
+		</tr>
+		<tr>
+			<td>邮箱</td><td class="usertd" user="email">{{user.email}}</td>
+		</tr>
+		<tr>
+			<td>电话</td><td class="usertd" user="tel">{{user.tel}}</td>
+		</tr>
+		<tr>
+			<td>地址</td><td class="usertd" user="addr">{{user.addr}}</td>
+		</tr>
+		<tr>
+			<td>邮编</td><td class="usertd" user="code">{{user.code}}</td>
+		</tr>
+		<tr>
+			<td>注册时间</td><td>{{user.createtime}}</td>
+		</tr>
+		<tr>
+			<td></td><td class="usertd"><a href="javascript:" class="xiu">编辑</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:" class="cun">保存</a></td>
+		</tr>
+	</table>
+</div>
+{% endblock %}
+{% block js %}
+<script>
+ 	$(document).ready(function () {
+			$('.xiu').click(function(){
+                $('.usertd').each(function(){
+                    if (this.childElementCount==0) {
+                        var tdval=$(this).html();
+                        var edit="<input type='text' value =" + tdval + ">";
+                        $(this).html(edit);
+
+                    }
+                })
+
+            })
+            $('.cun').click(function(){
+                data_dic={'userid':'{{ user.id }}'};
+                $('.usertd input').each(function(){
+                    var key=$(this).parent().attr('user')
+                    var inputval=this.value
+                    data_dic[key]=inputval
+                })
+                $.get('/profile_add/',data_dic,function(returndata){
+                    console.log(returndata)
+                    if (returndata==("OK")){
+                        $('.usertd input').each(function(){
+                            $(this).parent().html(this.value)
+                        })
+                    }
+                })
+            })
+      })
+</script>
+{% endblock %}

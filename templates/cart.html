@@ -18,11 +18,11 @@
                   {% for item in cart.items %}
                   <tr>
                     <td class="shopping-cart-description">
-                      <h3><a class="good" href="/item/{{item.good.id}}" gid={{item.good.id}}>{{item.good.name}}</a></h3>
+                      <h3><a class="good" href="/item/{{item.good.id}}" gid={{item.good.id}} >{{item.good.name}}</a></h3>
                     </td>
                     <td class="shopping-cart-quantity">
                       <div class="product-quantity" gid={{item.good.id}}>
-                          <input id="cnum"  type="text" value="{{item.count}}"  class="form-control input-sm ">
+                          <input id="cnum"  type="text" value="{{item.count}}"  class="form-control input-sm " onum="1">
                       </div>
                     </td>
                     <td class="shopping-cart-price">
@@ -81,17 +81,37 @@
 					}
 					})	
 			})
+	
 		$('[id=cnum]').on('change', function() {
+			good={}
     		 var gid=$(this).parent().attr('gid');
+    		 var onum=$(this).attr('onum')
+    		 //alert(onum)
     		 var num=$(this).val()
-    		 alert(gid)
-    		 alert(num)
+    		 $(this).attr('onum',num)
+    		 //alert(gid)
+    		 //alert(num)
     		 var xin=$(this).parent().parent().siblings('.shopping-cart-price').children('strong').text()
-    		 var xiaoji=$(this).parent().parent().siblings('.shopping-cart-total').children('strong').html(xin*num)
+    		 //alert(xin)
+    		 var newxin=xin*num
+    		 //alert(newxin)
+    		 var xiaoji=$(this).parent().parent().siblings('.shopping-cart-total').children('strong').html(newxin)
     		 var total=$('.price').text()
-    		 alert(total)
-    		 totals=total+xin*num
-    		 newtotal=$('.price').html(totals)
+    		 //alert(total)
+    		 if (num>onum){
+    		 var newtotal=Number(total)+Number(newxin)-Number(xin*onum)
+    		 //alert(newtotal)
+    		 }else{
+    		 var newtotal=(Number(total)-Number(xin*(onum-num))).toFixed(2)
+    		 //alert(newtotal)	
+    		 }
+    		  $('.price').html(newtotal)
+				good['gid']=gid
+				good['num']=num
+				good['total']=newtotal
+			$.get('/chgcart/',good,function(data){
+				
+				})
 			});
 		
 		$('.jiesuan').click(function(){

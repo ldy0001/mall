@@ -24,10 +24,11 @@ class Cart(object):
                 item.count += 1
                 return
         self.items.append(models.CartItem(good=good,price=good.sale_price,count=1))
-    def chg_good(self,good,num):
+    def chg_good(self,good,num,total_price):
          for item in self.items:
             if item.good.id == good.id:
                 item.count = num
+                self.total_price =total_price
                 return
     def del_good(self,good):
         for item in self.items:
@@ -134,10 +135,48 @@ def profile(request):
     return render(request,'profile.html',{'user':user})
 
 @check_session
+def profile_add(request):
+    userid=request.GET.get('userid')
+    print userid
+    email=request.GET.get('email')
+    if len(email)>5:
+        if re.match("^(\w)+(\.\w+)*@(\w)+((\.\w+)+)$", email) is None:
+            return HttpResponseRedirect('/profile/')
+        else:
+            userobj=models.Fuser.objects.get(id=userid)
+            userobj.name=request.GET.get('name')
+            userobj.sex=request.GET.get('sex')
+            userobj.birthday=request.GET.get('birthday')
+            userobj.email=email
+            userobj.tel=request.GET.get('tel')
+            userobj.address=request.GET.get('addr')
+            userobj.code=request.GET.get('code')
+            userobj.save()
+            return HttpResponse('OK')
+        
+@check_session
 def setpwd(request):
+    user=request.session.get("myuser")
+    user=models.Fuser.objects.get(username=user)
     if request.method=="POST":
-        pass
-    return render(request,'setpwd.html')
+        userid=request.POST.get('name')
+        print userid
+        oldpwd=request.POST.get('opwd')
+        newpwd=request.POST.get('pwd')
+        newpwd_try=request.POST.get('pwd_try')
+        if user is not None:
+            if user.password==oldpwd:
+                if newpwd==newpwd_try:
+                    user.password=newpwd
+                    user.save()
+                    return HttpResponseRedirect('/profile/')
+                else:
+                    err="两次密码不一致，请重新输入"
+                    return render_to_response('chgpwd.html',{'user':user,'msg':err})
+            else:
+                err="原来的密码错误，请核对后重试"
+                return render_to_response('chgpwd.html',{'user':user,'msg':err})
+    return render(request,'setpwd.html',{'user':user})
 
 def search(request):
     cate=models.Category.objects.filter(pid=None)
@@ -188,7 +227,7 @@ def addcart(request):
         print request.session["cart"]
     except Exception,e:
          print e 
-    return HttpResponseRedirect('/cart/')
+    return HttpResponse('OK')
    
   
 def cart(request):
@@ -232,17 +271,17 @@ def delgood(request):
 
     
 def chgcart(request):
-    gid=request.GET.getlist('gid')
+    gid=request.GET.get('gid')
     print gid
-    num=request.GET.getlist('num')
+    num=request.GET.get('num')
     print num
-    for g in gid:
-        good=models.Goods.objects.get('id=gid')
-        cart = request.session.get("cart")
-        cart.chg_good(good,num)
+    total_price=request.GET.get('total')
+    good=models.Goods.objects.get(id=gid)
+    cart = request.session.get("cart")
+    cart.chg_good(good,num,total_price)
     #cart = Cart(good)
-        request.session["cart"] = cart
-    return HttpResponseRedirect('/pay/')  
+    request.session["cart"] = cart
+    return HttpResponse('OK')  
 
 
 def orderid(request):

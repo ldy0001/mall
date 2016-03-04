@@ -7,7 +7,7 @@
               <div class="row">
                 <div class="col-md-6 col-sm-6">
                   <div class="product-main-image">
-                    <img src="/static/images/a1.jpg" alt="Cool green dress with red bell" class="img-responsive" >
+                    <img src=/media/{{good.pic}} alt="Cool green dress with red bell" class="img-responsive" >
                   </div>
                 </div>
                 <div class="col-md-6 col-sm-6">
@@ -65,6 +65,9 @@
 				console.log(gid)
 			$.get('/addcart/',gid,function(returndata){
 					console.log(returndata)
+				if (returndata==('OK')){
+					location.reload()
+					}
 			})
 		})
 	})

@@ -65,17 +65,17 @@
 		{% for g in goods %}
 		<tr class="shop">
 			<td>{{g.id}}</td>
-			<td good="cate">{{g.category}}</td>
-			<td good="name">{{g.name}}</td>
-			<td good="price">{{g.price}}</td>
-			<td good="sale_price">{{g.sale_price}}</td>
-			<td good="descriptiont">{{g.descriptiont}}</td>
-			<td good="amount">{{g.amount}}</td>
+			<td  class="good" good="cate">{{g.category}}</td>
+			<td  class="good"  good="name">{{g.name}}</td>
+			<td  class="good"  good="price">{{g.price}}</td>
+			<td  class="good"  good="sale_price">{{g.sale_price}}</td>
+			<td  class="good"  good="descriptiont">{{g.descriptiont}}</td>
+			<td  class="good"  good="amount">{{g.amount}}</td>
 			<td>{{g.pic}}</td>
-			<td good="status">{{g.status}}</td>
+			<td  class="good"  good="status">{{g.status}}</td>
 			<td>{{g.addtime}}</td>
-			<td good="paddr">{{g.paddr}}</td>
-			<td><a href="javascript:" class="xiu">修改</a><a href="javascript:" class="cun">保存</a></td>
+			<td  class="good"  good="paddr">{{g.paddr}}</td>
+			<td><a href="javascript:" id="xiu">修改</a><a href="javascript:" id="cun">保存</a></td>
 		</tr>
 		{% endfor %}
 	</table>
@@ -84,8 +84,8 @@
 {% block js %}
 <script>
  	$(document).ready(function () {
-			$('.xiu').click(function(){
-                $('.shop td').each(function(){
+			$('[id=xiu]').on('click',(function(){
+                $(this).parent().each(function(){
                     if (this.childElementCount==0) {
                         var tdval=$(this).html();
                         var edit="<input type='text' value =" + tdval + ">";
@@ -94,8 +94,8 @@
                     }
                 })
 
-            })
-            $('.cun').click(function(){
+            }))
+            $('[id=cun]').on('click',(function(){
                 data_dic={'host_id':'{{ hostdata.id }}'};
                 $('.table tr td input').each(function(){
                     var key=$(this).parent().attr('hostname')
@@ -110,7 +110,7 @@
                         })
                     }
                 })
-            })
+            }))
       })
 </script>
 {% endblock %}

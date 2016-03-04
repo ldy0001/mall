@@ -16,8 +16,11 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from shop import views
+import settings
+
 urlpatterns = [
-    url(r'^admin/',admin.site.urls),          
+    url(r'^admin/',admin.site.urls),
+    url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root':settings.MEDIA_ROOT}),          
     url(r'^houtai/',views.houtai,name='houtai'),
     url(r'^$', views.index),
     url(r'^zhuce/$', views.zhuce,name='zhuce'),
@@ -25,6 +28,7 @@ urlpatterns = [
 	url(r'^zhuce/$', views.zhuce,name='zhuce'),
     url(r'^logout/$', views.zhuxiao,name='logout'),
     url(r'^profile/$', views.profile,name='profile'),
+    url(r'^profile_add/$', views.profile_add,name='profile_add'),
     url(r'^setpwd/$', views.setpwd,name='setpwd'),
     url(r'^search/$', views.search,name='search'),
     url(r'^list/(?P<id>[\d]+)/$', views.list),
