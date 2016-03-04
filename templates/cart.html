@@ -18,21 +18,21 @@
                   {% for item in cart.items %}
                   <tr>
                     <td class="shopping-cart-description">
-                      <h3><a class="good" href="/item/{{item.good.id}} gid={{item.good.id}}">{{item.good.name}}</a></h3>
+                      <h3><a class="good" href="/item/{{item.good.id}}" gid={{item.good.id}}>{{item.good.name}}</a></h3>
                     </td>
                     <td class="shopping-cart-quantity">
-                      <div class="product-quantity">
-                          <input   type="text" value="{{item.count}}"  class="form-control input-sm ">
+                      <div class="product-quantity" gid={{item.good.id}}>
+                          <input id="cnum"  type="text" value="{{item.count}}"  class="form-control input-sm ">
                       </div>
                     </td>
                     <td class="shopping-cart-price">
-                      <strong><span>￥</span>{{item.price}}</strong>
+                      <span>￥</span><strong>{{item.price}}</strong>
                     </td>
                     <td class="shopping-cart-total">
-                      <strong><span>￥</span>{% widthratio item.count 1 item.price %}</strong>
+                      <span>￥</span><strong>{% widthratio item.count 1 item.price %}</strong>
                     </td>
                     <td class="del-goods-col">
-                      <a href="javascript:void(0);" >删除</a>
+                      <a id="delgood"  gid={{item.good.id}} href="javascript:">删除</a>
                     </td>
                   </tr>
                   {% endfor %}
@@ -42,11 +42,11 @@
                 <div class="shopping-total">
                   <ul>
                   <li class="shopping-total-price">
-                      <a  class="delcart">清空购物车</a>
+                      <a id="delcart" href="javascript:">清空购物车</a>
                     </li>
                     <li class="shopping-total-price">
                       <em>总计</em>
-                      <strong class="price"><span>￥</span>{{cart.total_price}}</strong>
+                      <span>￥</span><strong class="price">{{cart.total_price}}</strong>
                     </li>
                   </ul>
                 </div>
@@ -60,10 +60,40 @@
 {% block js %}
 <script>
 	$(document).ready(function(){
-		$('.delcart').click(function(){
-			$.get('/cart/',{'delcart':'delcart'},funciton(data){
-			})
+		$('[id=delgood]').on("click",function(){
+					dict_data={}
+					var gid=$(this).attr('gid')
+					dict_data['gid']=gid
+			$.get('/delgood/',dict_data,function(data){	 
+				if (data==("OK")){
+					location.reload()
+						} 
+				})
 		})
+		
+		$('#delcart').click(function(){
+					data={}
+					var a='delcart'
+					data['dc']=a
+			$.get('/cart/',data,function(data){		
+				if (data==("OK")){
+					location.reload()
+					}
+					})	
+			})
+		$('[id=cnum]').on('change', function() {
+    		 var gid=$(this).parent().attr('gid');
+    		 var num=$(this).val()
+    		 alert(gid)
+    		 alert(num)
+    		 var xin=$(this).parent().parent().siblings('.shopping-cart-price').children('strong').text()
+    		 var xiaoji=$(this).parent().parent().siblings('.shopping-cart-total').children('strong').html(xin*num)
+    		 var total=$('.price').text()
+    		 alert(total)
+    		 totals=total+xin*num
+    		 newtotal=$('.price').html(totals)
+			});
+		
 		$('.jiesuan').click(function(){
 			$.get('/orderid/',1,function(){})
 			})

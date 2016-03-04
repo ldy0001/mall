@@ -46,7 +46,7 @@ class Goods(models.Model):
     sale_price = models.DecimalField(max_digits=12,decimal_places=2,default='0.00') #销售价格
     descriptiont = models.TextField(null=True,blank=True)                           #商品描述
     amount = models.IntegerField(null=True,blank=True)                              #库存数量
-    pic = models.ImageField(null=True,blank=True)                                   #商品图片
+    pic = models.ImageField(upload_to='images',null=True,blank=True)                  #商品图片
     status = models.IntegerField(null=True,blank=True)                              #商品状态
     addtime = models.DateTimeField(auto_now_add=True)                               #商品添加时间
     paddr = models.CharField(max_length=30)                                         #商品产地

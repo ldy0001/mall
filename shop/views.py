@@ -28,7 +28,17 @@ class Cart(object):
          for item in self.items:
             if item.good.id == good.id:
                 item.count = num
-                return   
+                return
+    def del_good(self,good):
+        for item in self.items:
+            if item.good.id==good.id:
+                print 'goodid',good.id
+                print 'item.good.id',item.good.id
+                self.items.remove(item)
+                self.total_price = self.total_price-float(item.good.sale_price*item.count)
+                for i in self.items:
+                    print i.good
+                return  
 
 def check_session(func):
     def wrapper(request,*args, **kv):
@@ -130,25 +140,40 @@ def setpwd(request):
     return render(request,'setpwd.html')
 
 def search(request):
+    cate=models.Category.objects.filter(pid=None)
+    print cate
+    cart = request.session.get("cart")
+    user=request.session.get("myuser")
+    cate2=models.Category.objects.all()
     if request.method=='GET':
         search=request.GET.get('search')
         print search
         result=models.Goods.objects.filter(name__icontains=search)
         print result
-        return render(request,'search.html',{'result':result})
+        return render(request,'search.html',{'result':result,'cate':cate,'cate2':cate2,'cart':cart,'user':user})
 
 def list(request,id):
+    cart = request.session.get("cart")
+    user=request.session.get("myuser")
+    cates=models.Category.objects.filter(pid=None)
+    print cates
+    cate2=models.Category.objects.all()
     if request.method=='GET':
         print id
         cate=models.Category.objects.get(id=id)
         result=models.Goods.objects.filter(category=cate)
         print result
-        return render(request,'list.html',{'result':result})
+        return render(request,'list.html',{'result':result,'cate':cates,'cate2':cate2,'cart':cart,'user':user})
 
 def item(request,id):
+    cart = request.session.get("cart")
+    user=request.session.get("myuser")
+    cate=models.Category.objects.filter(pid=None)
+    print cate
+    cate2=models.Category.objects.all()    
     good=models.Goods.objects.get(id=id)
     comment=models.Comment.objects.filter(goods=good).order_by('-id')
-    return render(request,'item.html',{'good':good,'comment':comment})
+    return render(request,'item.html',{'good':good,'comment':comment,'cate':cate,'cate2':cate2,'cart':cart,'user':user})
     
 def addcart(request):
     id=request.GET.get('goodid')
@@ -167,6 +192,15 @@ def addcart(request):
    
   
 def cart(request):
+    user=request.session.get("myuser")
+    cate=models.Category.objects.filter(pid=None)
+    print cate
+    cate2=models.Category.objects.all()
+    if request.GET.get('dc')=='delcart':
+        print request.GET.get('dc')
+        del request.session['cart']
+        data="OK"
+        return HttpResponse(data)
     try:
 #        cart = request.session.get("cart",None)
 #        print 'session cart---',cart
@@ -184,11 +218,19 @@ def cart(request):
 #            return HttpResponse(t.render(c))   
     except Exception,e:
         print e
-    if request.GET.get('delcart')=='delcart':
-        del request.session['cart']
-        return HttpResponseRedirect('/cart/')
-    return render(request,'cart.html',{'cart':cart})    
+    return render(request,'cart.html',{'cart':cart,'cate':cate,'cate2':cate2,'user':user})    
 
+def delgood(request):
+    gid=request.GET.get('gid')
+    print gid
+    good=models.Goods.objects.get(id=gid)
+    cart = request.session.get("cart")
+    cart.del_good(good)
+    request.session["cart"] = cart
+    data="OK"
+    return HttpResponse(data)
+
+    
 def chgcart(request):
     gid=request.GET.getlist('gid')
     print gid
@@ -217,6 +259,7 @@ def orderid(request):
     
 @check_session    
 def pay(request):
+    user=request.session.get("myuser")
     pays=models.PayMethod.objects.all()
     cart = request.session.get("cart")
     orderid=request.session.get("orderid")
@@ -260,7 +303,7 @@ def pay(request):
         del request.session['orderid']
         return HttpResponseRedirect('/myorder/')    
         
-    return render(request,'pay.html',{'cart':cart,'pays':pays,'oid':orderid})
+    return render(request,'pay.html',{'cart':cart,'pays':pays,'oid':orderid,'user':user})
 
 @check_session
 def myorder(request):
@@ -271,7 +314,7 @@ def myorder(request):
         print e    
     orders=models.Order.objects.filter(user=user)
     ordergoods=models.OrderGoods.objects.all()
-    return render(request,'myorder.html',{'orders':orders,'ordergoods':ordergoods})
+    return render(request,'myorder.html',{'orders':orders,'ordergoods':ordergoods,'user':user})
 
 @check_session
 def ordersearch(request):
@@ -283,7 +326,7 @@ def ordersearch(request):
         og=models.OrderGoods.objects.filter(order_id=result)
     except Exception,e:
         return HttpResponseRedirect('/myorder/')
-    return render(request,'ordersearch.html',{'result':result,'og':og})
+    return render(request,'ordersearch.html',{'result':result,'og':og,'user':user})
 
 def orderinfo(request,id):
     user=request.session.get("myuser")
@@ -293,7 +336,7 @@ def orderinfo(request,id):
         og=models.OrderGoods.objects.filter(order_id=result)
     except Exception,e:
         return HttpResponseRedirect('/myorder/')
-    return render(request,'orderinfo.html',{'result':result,'og':og})
+    return render(request,'orderinfo.html',{'result':result,'og':og,'user':user})
 
 @check_session
 def comment(request,id):
@@ -308,7 +351,7 @@ def comment(request,id):
         url="/item/%s/"%(id)
         return HttpResponseRedirect(url)
         
-    return render(request,'comment.html',{'good':good})
+    return render(request,'comment.html',{'good':good,'user':user})
 
 
 def check_session_hou(func):
@@ -316,7 +359,7 @@ def check_session_hou(func):
         userinfo=request.session.get('buser',None) 
         print userinfo
         if not userinfo:
-            return HttpResponseRedirect('/admin/')
+            return HttpResponseRedirect('/houtai/')
         return func(request,*args, **kv)
     return wrapper
 
@@ -350,7 +393,7 @@ def tuichu(request):
         request.session['buser']=''
     except KeyError:
         pass
-    return HttpResponseRedirect('/admin/')
+    return HttpResponseRedirect('/houtai/')
 @check_session_hou
 def manage(request):
     return render(request,'manage.html')
@@ -442,7 +485,9 @@ def goodlist(request):
     return render(request,'goodlist.html',{'goods':goods,'cate':cate})
 
 @check_session_hou
-def goods(request):
+def good(request):
+    goodid=request.GET.get('gid')
+    
     return render(request,'goods.html')
 
 @check_session_hou

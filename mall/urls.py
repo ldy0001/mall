@@ -17,8 +17,8 @@ from django.conf.urls import url
 from django.contrib import admin
 from shop import views
 urlpatterns = [
-    #url(r'^admin/',admin.site.urls),          
-    url(r'^admin/',views.houtai,name='admin'),
+    url(r'^admin/',admin.site.urls),          
+    url(r'^houtai/',views.houtai,name='houtai'),
     url(r'^$', views.index),
     url(r'^zhuce/$', views.zhuce,name='zhuce'),
     url(r'^login/$', views.denglu,name='login'),
@@ -32,6 +32,7 @@ urlpatterns = [
     url(r'^cart/$', views.cart,name='cart'),
     url(r'^addcart/$', views.addcart,name='addcart'),
     url(r'^chgcart/$', views.chgcart,name='chgcart'),
+    url(r'^delgood/$', views.delgood,name='delgood'),
     url(r'^orderid/$', views.orderid,name='orderid'),
     url(r'^pay/$', views.pay,name='pay'),
     url(r'^myorder/$', views.myorder,name='myorder'),
@@ -45,8 +46,8 @@ urlpatterns = [
     url(r'^buseradd/$', views.buseradd,name='buseradd'),
     url(r'^chgpwd/$', views.chgpwd,name='chgpwd'),
     url(r'^cate/$', views.cate,name='cate'),
-    url(r'^goods/$', views.goods,name='goods'),
     url(r'^goodlist/$', views.goodlist,name='goodslist'),
+    url(r'^good/$', views.good,name='good'),
     url(r'^ordermodify/$', views.ordermodify,name='ordermodify'),
     url(r'^orderlist/$', views.orderlist,name='orderlist'),
     url(r'^fuser/$', views.fuser,name='fuser'),

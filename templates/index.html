@@ -79,7 +79,7 @@
                               <ul>
                               {% for c2 in cate2 %}
                               	{% ifequal c2.pid_id c1.id %} 
-                                <li><a href="list/{{c2.id}}/">{{c2.name}}</a></li>
+                                <li><a href="/list/{{c2.id}}/">{{c2.name}}</a></li>
                                 {% endifequal %}
                                 {% endfor %}
                               </ul>
@@ -114,7 +114,7 @@
                     <div class="pi-img-wrapper">
                       <img src="" class="img-responsive" alt="Berry Lace Dress" />
                     </div>
-                    <h3><a href="item/{{g.id}}/">{{g.name}}</a></h3>
+                    <h3><a href="/item/{{g.id}}/">{{g.name}}</a></h3>
                     <div class="pi-price">{{g.sale_price}}</div>
                     <a  class="btn btn-default add2cart" aa={{g.id}}>加入购物车</a>
 

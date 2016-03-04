@@ -10,7 +10,7 @@
     {% endblock %}
 {%block body%}
 <div class="container">
-    <form class="form-signin" method="post" action={% url 'admin' %}>{% csrf_token %}
+    <form class="form-signin" method="post" action={% url 'houtai' %}>{% csrf_token %}
         <h2 class="form-signin-heading">后台登陆</h2>
         <input id="inputEmail" class="form-control" placeholder="用户名" required="" autofocus="" type="text" name="username">
         <input id="inputPassword" class="form-control" placeholder="密码" required="" type="password" name="password">
